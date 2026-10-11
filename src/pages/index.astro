@@ -1,7 +1,6 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ArrowLink from '../components/ArrowLink.astro';
 
 import heroMain from '../assets/heroes/hero-sunset.jpg';
 import heroPool from '../assets/heroes/hero-pool.jpg';
@@ -17,6 +16,7 @@ import terraza from '../assets/projects/terraza-buenos-aires.png';
 import aberturas from '../assets/projects/instalacion-aberturas.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 const services = [
   { title: 'Aberturas de aluminio', image: heroInterior },
   { title: 'Cerramientos de aluminio', image: patio },
@@ -49,30 +49,59 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
         <p class="home-hero__copy">Diseñamos, fabricamos e instalamos aberturas y cerramientos que integran arquitectura, funcionalidad y calidad.</p>
         <div class="hero-actions">
           <a class="text-link" href={`${base}/servicios/`}>Conocé nuestros servicios</a>
-          <a class="text-link" href={`${base}/contacto/`}>Solicitá presupuesto</a>
+          <a class="whatsapp-cta whatsapp-cta--light" href={whatsapp} target="_blank" rel="noreferrer">Solicitar presupuesto <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
     <span class="scroll-cue">Descubrí</span>
   </section>
 
-  <section class="section light-section">
-    <div class="wrap intro-grid">
-      <div class="intro-grid__aside reveal-up">
-        <p class="eyebrow">ALMAT CERRAMIENTOS</p>
-      </div>
-      <div class="intro-grid__main">
-        <h2 class="section-title reveal-title">Cada espacio merece una solución a su medida.</h2>
-        <div class="intro-story">
-          <div class="intro-story__copy reveal-up">
-            <p>Hace 30 años que trabajamos en la fabricación e instalación de aberturas y cerramientos, combinando experiencia, materiales de calidad y atención personalizada para proyectos residenciales y comerciales.</p>
-            <ArrowLink href={`${base}/nosotros/`} label="Conocé ALMAT" />
-          </div>
-          <div class="image-frame" data-reveal>
-            <Image src={fachadaOndulada} alt="Fachada residencial con balcones y paños vidriados" widths={[520, 820, 1100]} sizes="(max-width: 640px) 100vw, 42vw" loading="lazy" data-parallax />
-          </div>
+  <section class="factory-statement light-section">
+    <div class="wrap">
+      <p class="eyebrow reveal-up">DISEÑO, VENTA Y COLOCACIÓN</p>
+      <h2 class="factory-statement__title reveal-title">Somos una fábrica de aberturas de alta prestación.</h2>
+      <div class="factory-statement__lower">
+        <div class="factory-statement__copy reveal-up">
+          <p>Hace 30 años fabricamos e instalamos soluciones que combinan precisión, materiales de calidad y atención personalizada para proyectos residenciales y comerciales.</p>
+          <a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Contactanos hoy <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="factory-statement__image" data-reveal>
+          <Image src={fachadaOndulada} alt="Fachada residencial con balcones y paños vidriados" widths={[620, 960, 1300]} sizes="(max-width: 760px) 100vw, 50vw" loading="lazy" data-parallax />
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="capabilities light-section">
+    <div class="wrap capabilities__head">
+      <p class="eyebrow reveal-up">LO QUE HACEMOS</p>
+      <h2 class="section-title reveal-title">Cuatro soluciones. Una misma precisión.</h2>
+    </div>
+    <div class="wrap capabilities-grid">
+      <article class="capability-card" data-reveal>
+        <div class="capability-card__image"><Image src={heroInterior} alt="Aberturas de aluminio de gran formato" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
+        <span>01</span><h3>Fabricación e instalación de aberturas de aluminio</h3>
+        <p>Fabricamos e instalamos aberturas de aluminio de todo tamaño para responder a las necesidades de cada proyecto.</p>
+        <a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Quiero asesoramiento <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="capability-card" data-reveal data-reveal-delay="1">
+        <div class="capability-card__image"><Image src={patio} alt="Cerramiento de aluminio integrado a un patio" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
+        <span>02</span><h3>Cerramientos de aluminio</h3>
+        <p>Nos especializamos en la instalación de cerramientos de aluminio para integrar y aprovechar mejor cada espacio.</p>
+        <a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Consultar cerramientos <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="capability-card" data-reveal data-reveal-delay="2">
+        <div class="capability-card__image"><Image src={lobby} alt="Vidrio templado aplicado en un interior contemporáneo" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
+        <span>03</span><h3>Vidrios, espejos y templados</h3>
+        <p>Contamos con experiencia en colocación de espejos de diseño, vidrios de seguridad y templados.</p>
+        <a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Hacer una consulta <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="capability-card" data-reveal data-reveal-delay="3">
+        <div class="capability-card__image"><Image src={pergola} alt="Cerramiento vidriado corredizo en una terraza" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
+        <span>04</span><h3>Cerramientos corredizos y plegadizos de vidrio</h3>
+        <p>Fabricamos y colocamos sistemas vidriados para conectar y transformar hogares, comercios y otros espacios.</p>
+        <a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Solicitar presupuesto <span aria-hidden="true">↗</span></a>
+      </article>
     </div>
   </section>
 
@@ -82,7 +111,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
         <p class="eyebrow reveal-up">NUESTRAS SOLUCIONES</p>
         <h2 class="section-title reveal-title" style="margin-top:1.25rem">Soluciones que transforman espacios.</h2>
       </div>
-      <ArrowLink href={`${base}/servicios/`} label="Explorá nuestros servicios" light />
+      <a class="whatsapp-cta whatsapp-cta--light" href={whatsapp} target="_blank" rel="noreferrer">Quiero asesoramiento <span aria-hidden="true">↗</span></a>
     </div>
     <div class="service-explorer">
       <div class="service-explorer__images">
@@ -116,6 +145,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
         </button>
       ))}
     </div>
+    <div class="wrap module-action"><a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Quiero un proyecto así <span aria-hidden="true">↗</span></a></div>
     <dialog class="lightbox" data-lightbox aria-label="Visor de trabajos">
       <button class="lightbox__close" type="button" data-lightbox-close aria-label="Cerrar visor">×</button>
       <div class="lightbox__stage"><img src="" alt="" /></div>
@@ -133,12 +163,12 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
       <h2 class="section-title reveal-title">Belleza que también se siente.</h2>
     </div>
     <div class="wrap benefit-list">
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">01</span><h3>Confort térmico y acústico</h3><p>Según la línea, el tipo de vidrio y la instalación, las soluciones adecuadas contribuyen a mejorar el aislamiento y el bienestar interior.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Durabilidad y resistencia</h3><p>El aluminio ofrece una respuesta sólida y de bajo mantenimiento para acompañar el uso cotidiano y el paso del tiempo.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Seguridad</h3><p>La selección del sistema, los herrajes y los vidrios permite proyectar soluciones acordes a las necesidades de cada ambiente.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Versatilidad arquitectónica</h3><p>Perfiles, aperturas y terminaciones se combinan para integrarse con naturalidad a lenguajes arquitectónicos diversos.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">05</span><h3>Materiales reciclables</h3><p>El aluminio puede reciclarse y volver a incorporarse a nuevos ciclos productivos, conservando sus propiedades.</p></div>
+      <div class="benefit-row" data-reveal><span class="benefit-row__number">01</span><h3>Climatización e insonorización</h3><p>Según la línea, el vidrio y la instalación, una abertura adecuada puede contribuir al aislamiento térmico y acústico de los ambientes.</p></div>
+      <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Ecología y sustentabilidad</h3><p>El aluminio es un material reciclable que puede reincorporarse a nuevos ciclos productivos conservando sus propiedades.</p></div>
+      <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Durabilidad y economía</h3><p>Su resistencia y bajo mantenimiento favorecen una vida útil prolongada y un buen desempeño cotidiano.</p></div>
+      <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Seguridad</h3><p>Perfiles, herrajes y vidrios se seleccionan de acuerdo con las necesidades de protección y uso de cada proyecto.</p></div>
     </div>
+    <div class="wrap module-action"><a class="whatsapp-cta" href={whatsapp} target="_blank" rel="noreferrer">Elegir la solución adecuada <span aria-hidden="true">↗</span></a></div>
   </section>
 
   <section class="trust dark-section">
@@ -153,6 +183,22 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
       <div class="partner-names reveal-up" aria-label="Marcas y proveedores">
         <span>Aluar</span><span>Metales del Talar</span><span>Tanit</span><span>Giesse</span><span>Red Ekoglass</span>
       </div>
+      <a class="whatsapp-cta whatsapp-cta--light" href={whatsapp} target="_blank" rel="noreferrer">Contactanos hoy <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <section class="logo-strip dark-section" aria-label="Marcas con las que trabajamos">
+    <div class="wrap logo-strip__inner">
+      <p class="eyebrow">MARCAS QUE NOS ACOMPAÑAN</p>
+      <div class="logo-strip__logos">
+        <img src={`${base}/partners/blindex.webp`} alt="Blindex" />
+        <img src={`${base}/partners/vasa.webp`} alt="VASA Vidriería Argentina" />
+        <img src={`${base}/partners/aluar.webp`} alt="Aluar" />
+        <img src={`${base}/partners/casasegat.webp`} alt="Casa Segat" />
+        <img src={`${base}/partners/mdt.webp`} alt="MDT Tecnología en Aluminio y Vidrio" />
+        <img src={`${base}/partners/vilo.webp`} alt="Vilo" />
+      </div>
+      <a class="whatsapp-cta whatsapp-cta--light" href={whatsapp} target="_blank" rel="noreferrer">Consultar materiales <span aria-hidden="true">↗</span></a>
     </div>
   </section>
 
@@ -165,7 +211,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
       </div>
       <div class="visual-cta__aside reveal-up">
         <p>Contanos qué necesitás. Te ayudamos a encontrar la solución adecuada para tu proyecto.</p>
-        <ArrowLink href={`${base}/contacto/`} label="Solicitá tu presupuesto" light />
+        <a class="whatsapp-cta whatsapp-cta--light" href={whatsapp} target="_blank" rel="noreferrer">Solicitá tu presupuesto <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
