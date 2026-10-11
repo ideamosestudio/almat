@@ -20,6 +20,8 @@ Las clases reutilizables principales son `.display-title`, `.section-title`, `.l
 
 Para módulos editoriales se usa `.section-composition` junto con `.section-composition--split` y `.section-support`. El CTA debe permanecer dentro de `.section-support`, junto al texto que explica la acción.
 
+Las fotografías independientes ocupan el ancho de su contenedor y comienzan sobre el eje izquierdo. Una imagen sólo puede compartir fila cuando existe contenido real ocupando la columna contigua; no se usan desplazamientos que produzcan columnas vacías.
+
 ## Acciones
 
 `ActionLink.astro` concentra todas las acciones enlazadas:
