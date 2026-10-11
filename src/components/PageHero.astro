@@ -1,21 +1,46 @@
 ---
 import { Image } from 'astro:assets';
+import ActionLink from './ActionLink.astro';
 interface Props {
   image: ImageMetadata;
   eyebrow: string;
   title: string;
   intro?: string;
   position?: string;
+  align?: 'left' | 'center' | 'split';
+  primaryCta?: { href: string; label: string; external?: boolean };
+  secondaryCta?: { href: string; label: string; external?: boolean };
 }
-const { image, eyebrow, title, intro, position = 'center' } = Astro.props;
+const {
+  image,
+  eyebrow,
+  title,
+  intro,
+  position = 'center',
+  align = 'left',
+  primaryCta,
+  secondaryCta
+} = Astro.props;
 ---
-<section class="page-hero dark-zone">
+<section class:list={['page-hero', 'dark-zone', `page-hero--${align}`]}>
   <Image class="page-hero__image" src={image} alt="" widths={[720, 1200, 1920]} sizes="100vw" loading="eager" fetchpriority="high" style={`object-position:${position}`} />
   <div class="page-hero__shade"></div>
   <div class="page-hero__content wrap">
-    <p class="eyebrow reveal-up">{eyebrow}</p>
-    <h1 class="display-title reveal-title">{title}</h1>
-    {intro && <p class="page-hero__intro reveal-up">{intro}</p>}
+    <div class="page-hero__heading">
+      <p class="eyebrow reveal-up">{eyebrow}</p>
+      <h1 class="display-title reveal-title">{title}</h1>
+    </div>
+    {(intro || primaryCta || secondaryCta) && (
+      <div class="page-hero__support reveal-up">
+        {intro && <p class="page-hero__intro">{intro}</p>}
+        {(primaryCta || secondaryCta) && (
+          <div class="cta-group">
+            {primaryCta && <ActionLink {...primaryCta} variant="primary" light />}
+            {secondaryCta && <ActionLink {...secondaryCta} variant="secondary" light />}
+          </div>
+        )}
+      </div>
+    )}
   </div>
   <span class="page-hero__index">ALMAT / 1996—2026</span>
 </section>

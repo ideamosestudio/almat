@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import ArrowLink from '../components/ArrowLink.astro';
+import ActionLink from '../components/ActionLink.astro';
 import heroInterior from '../assets/heroes/hero-interior.jpg';
 import aluminio from '../assets/projects/interior-en-obra.png';
 import cerramientos from '../assets/projects/patio-vidriado.png';
@@ -12,6 +12,7 @@ import pvc from '../assets/projects/instalacion-aberturas.png';
 import finalImage from '../assets/heroes/hero-pool.jpg';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 const services = [
   { title: 'Aberturas de aluminio', text: 'Fabricación e instalación de aberturas de aluminio de diferentes tamaños, adaptadas a las necesidades de cada proyecto.', image: aluminio, alt: 'Abertura de aluminio de gran formato en una obra contemporánea' },
   { title: 'Cerramientos de aluminio', text: 'Soluciones para integrar, proteger y aprovechar mejor distintos espacios mediante cerramientos de calidad.', image: cerramientos, alt: 'Cerramiento de aluminio y vidrio en un patio residencial' },
@@ -21,9 +22,18 @@ const services = [
 ];
 ---
 <BaseLayout title="Servicios | ALMAT Cerramientos" description="Aberturas de aluminio y PVC, cerramientos, vidrios, espejos, templados y sistemas corredizos o plegadizos en Buenos Aires.">
-  <PageHero image={heroInterior} eyebrow="NUESTRAS SOLUCIONES" title="Precisión en cada detalle." intro="Aberturas y cerramientos que combinan diseño, resistencia y funcionalidad para acompañar cada proyecto arquitectónico." position="center" />
+  <PageHero
+    image={heroInterior}
+    eyebrow="NUESTRAS SOLUCIONES"
+    title="Precisión en cada detalle."
+    intro="Aberturas y cerramientos que combinan diseño, resistencia y funcionalidad para acompañar cada proyecto arquitectónico."
+    position="center"
+    align="split"
+    primaryCta={{ href: whatsapp, label: 'Solicitar presupuesto', external: true }}
+    secondaryCta={{ href: '#servicios', label: 'Explorar soluciones' }}
+  />
 
-  <section class="section light-section">
+  <section class="section light-section" id="servicios">
     <div class="wrap services-intro">
       <h2 class="section-title reveal-title">Una respuesta para cada forma de habitar.</h2>
       <p class="body-large reveal-up">Trabajamos la relación entre interior y exterior, luz y protección, apertura y privacidad. Cada sistema se define según el espacio y sus necesidades reales.</p>
@@ -40,6 +50,9 @@ const services = [
           <span class="service-scene__number reveal-up">0{index + 1} / 05</span>
           <h2 class="reveal-title">{service.title}</h2>
           <p class="reveal-up">{service.text}</p>
+          <div class="cta-group reveal-up">
+            <ActionLink href={whatsapp} label="Consultar esta solución" external />
+          </div>
         </div>
       </article>
     ))}
@@ -54,7 +67,10 @@ const services = [
       </div>
       <div class="visual-cta__aside reveal-up">
         <p>Contanos qué espacio querés transformar y qué necesidades necesitás resolver.</p>
-        <ArrowLink href={`${base}/contacto/`} label="Solicitá tu presupuesto" light />
+        <div class="cta-group">
+          <ActionLink href={whatsapp} label="Solicitá tu presupuesto" light external />
+          <ActionLink href={`${base}/contacto/`} label="Ver contacto" variant="secondary" light />
+        </div>
       </div>
     </div>
   </section>

@@ -2,18 +2,28 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import ArrowLink from '../components/ArrowLink.astro';
+import ActionLink from '../components/ActionLink.astro';
 import heroCity from '../assets/heroes/hero-city.jpg';
 import fachada from '../assets/projects/fachada-moderna.png';
 import instalacion from '../assets/projects/instalacion-balcon.png';
 import showroom from '../assets/projects/lobby-vidrio.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 ---
 <BaseLayout title="Nosotros | ALMAT Cerramientos" description="Conocé ALMAT: una empresa familiar de Caballito con 30 años de experiencia en aberturas, aluminio, vidrio, PVC y cerramientos.">
-  <PageHero image={heroCity} eyebrow="NOSOTROS / ALMAT" title="Tres décadas transformando espacios." intro="Experiencia, atención personalizada y una mirada precisa sobre cada proyecto." position="center 55%" />
+  <PageHero
+    image={heroCity}
+    eyebrow="NOSOTROS / ALMAT"
+    title="Tres décadas transformando espacios."
+    intro="Experiencia, atención personalizada y una mirada precisa sobre cada proyecto."
+    position="center 55%"
+    align="left"
+    primaryCta={{ href: whatsapp, label: 'Hablar con ALMAT', external: true }}
+    secondaryCta={{ href: '#historia', label: 'Conocer nuestra historia' }}
+  />
 
-  <section class="section light-section">
+  <section class="section light-section" id="historia">
     <div class="wrap editorial-split">
       <p class="eyebrow reveal-up">NUESTRA HISTORIA</p>
       <div class="editorial-split__body">
@@ -43,6 +53,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <div class="method-step" data-reveal><span>02</span><p>Selección de sistemas y materiales adecuados al proyecto.</p></div>
           <div class="method-step" data-reveal><span>03</span><p>Fabricación e instalación con atención a encuentros y terminaciones.</p></div>
         </div>
+        <div class="cta-group reveal-up">
+          <ActionLink href={whatsapp} label="Quiero asesoramiento" external />
+        </div>
       </div>
     </div>
   </section>
@@ -66,7 +79,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="eyebrow reveal-up">NUESTRO SHOWROOM</p>
       <h2 class="section-title reveal-title">Conocé las soluciones de cerca.</h2>
       <p class="showroom-address reveal-up">Av. Raúl Scalabrini Ortiz 1022<br />CABA, Buenos Aires</p>
-      <ArrowLink href={`${base}/contacto/`} label="Cómo llegar y consultar" />
+      <div class="cta-group reveal-up">
+        <ActionLink href="https://maps.google.com/?q=Av.+Raúl+Scalabrini+Ortiz+1022,+CABA" label="Cómo llegar" external />
+        <ActionLink href={`${base}/contacto/`} label="Consultar" variant="secondary" />
+      </div>
     </div>
   </section>
 </BaseLayout>

@@ -5,11 +5,21 @@ import heroGolden from '../assets/heroes/hero-golden.jpg';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const thanksUrl = `https://ideamosestudio.github.io${base}/contacto/?enviado=1`;
+const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 ---
 <BaseLayout title="Contacto | ALMAT Cerramientos" description="Solicitá un presupuesto para aberturas y cerramientos. Showroom en Av. Raúl Scalabrini Ortiz 1022, CABA.">
-  <PageHero image={heroGolden} eyebrow="HABLEMOS DE TU PROYECTO" title="Hagamos realidad tu próximo espacio." intro="Contanos qué tenés en mente. Nuestro equipo puede asesorarte sobre las soluciones disponibles para tu proyecto." position="center" />
+  <PageHero
+    image={heroGolden}
+    eyebrow="HABLEMOS DE TU PROYECTO"
+    title="Hagamos realidad tu próximo espacio."
+    intro="Contanos qué tenés en mente. Nuestro equipo puede asesorarte sobre las soluciones disponibles para tu proyecto."
+    position="center"
+    align="split"
+    primaryCta={{ href: whatsapp, label: 'Escribir por WhatsApp', external: true }}
+    secondaryCta={{ href: '#contacto', label: 'Completar formulario' }}
+  />
 
-  <section class="section light-section">
+  <section class="section light-section" id="contacto">
     <div class="wrap contact-layout">
       <div class="contact-details">
         <p class="eyebrow reveal-up">CONTACTO DIRECTO</p>
@@ -58,7 +68,7 @@ const thanksUrl = `https://ideamosestudio.github.io${base}/contacto/?enviado=1`;
             <textarea id="mensaje" name="mensaje" required minlength="10"></textarea>
           </div>
         </div>
-        <button class="form-submit" type="submit"><span>Enviar consulta</span><span aria-hidden="true">↗</span></button>
+        <button class="form-submit cta cta--primary" type="submit"><span>Enviar consulta</span><span class="cta__icon" aria-hidden="true">↗</span></button>
         <p class="form-note">Los datos se utilizan únicamente para responder tu consulta.</p>
         <p class="form-status" data-form-status aria-live="polite"></p>
       </form>

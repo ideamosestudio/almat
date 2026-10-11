@@ -11,6 +11,7 @@ const browser = await chromium.launch({
 
 const profiles = [
   ['desktop', 1440, 1100],
+  ['laptop', 1024, 900],
   ['tablet', 768, 1024],
   ['mobile', 390, 844]
 ];
@@ -27,24 +28,30 @@ for (const [profile, width, height] of profiles) {
     if (!response?.ok()) errors.push(`${profile}/${route || 'home'}: HTTP ${response?.status()}`);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
     if (overflow) errors.push(`${profile}/${route || 'home'}: horizontal overflow`);
+    const h1Count = await page.locator('h1').count();
+    if (h1Count !== 1) errors.push(`${profile}/${route || 'home'}: expected one H1, found ${h1Count}`);
+    const heroCtaCount = await page.locator('.page-hero .cta, .home-hero .cta').count();
+    if (heroCtaCount < 1) errors.push(`${profile}/${route || 'home'}: hero has no CTA`);
+    const emptyCtas = await page.locator('.cta').evaluateAll((links) => links.filter((link) => !link.textContent?.trim() || (link instanceof HTMLAnchorElement && !link.getAttribute('href'))).length);
+    if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
+    await page.waitForTimeout(900);
+    const sections = await page.locator('main > section').all();
+    for (const section of sections) {
+      await section.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(100);
+    }
     if (route === '') {
-      await page.waitForTimeout(1800);
-      const sections = await page.locator('main > section').all();
-      for (const section of sections) {
-        await section.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(140);
-      }
-      const ctas = await page.locator('a.whatsapp-cta').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-      if (ctas.length < 12) errors.push(`${profile}/home: expected at least 12 WhatsApp CTAs, found ${ctas.length}`);
-      if (ctas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) {
-        errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
-      }
+      const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+      if (whatsappCtas.length < 12) errors.push(`${profile}/home: expected at least 12 WhatsApp CTAs, found ${whatsappCtas.length}`);
+      if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
       const logosLoaded = await page.locator('.logo-strip__logos img').evaluateAll((images) => images.length === 6 && images.every((image) => image.complete && image.naturalWidth > 0));
       if (!logosLoaded) errors.push(`${profile}/home: partner logos did not load correctly`);
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.waitForTimeout(250);
-      await page.screenshot({ path: new URL(`home-${profile}.png`, root).pathname.slice(1), fullPage: true });
     }
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: new URL(`${route.replace('/', '') || 'home'}-${profile}.png`, root).pathname.slice(1), fullPage: true });
   }
   await page.close();
 }
@@ -54,4 +61,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('QA passed: 4 routes × 3 viewports, no console errors or horizontal overflow.');
+console.log('QA passed: 4 routes × 4 viewports, one H1 per page, functional CTAs, no console errors or horizontal overflow.');
