@@ -1,0 +1,54 @@
+---
+const currentPath = Astro.url.pathname;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { label: 'Inicio', href: `${base}/` },
+  { label: 'Nosotros', href: `${base}/nosotros/` },
+  { label: 'Servicios', href: `${base}/servicios/` },
+  { label: 'Contacto', href: `${base}/contacto/` }
+];
+const isCurrent = (href: string) => href === `${base}/` ? currentPath === href : currentPath.startsWith(href);
+---
+
+<header class="site-header" data-header>
+  <a class="brand" href={`${base}/`} aria-label="ALMAT, volver al inicio">
+    <img class="brand__light" src={`${base}/brand/almat-logo-white.png`} alt="ALMAT" width="181" height="60" />
+    <img class="brand__dark" src={`${base}/brand/almat-logo-black.png`} alt="" width="181" height="60" aria-hidden="true" />
+  </a>
+
+  <nav class="desktop-nav" aria-label="Navegación principal">
+    {nav.map((item) => (
+      <a href={item.href} class:list={["nav-link", { active: isCurrent(item.href) }]} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+        {item.label}
+      </a>
+    ))}
+  </nav>
+
+  <a class="header-contact desktop-only" href={`${base}/contacto/`}>
+    Presupuesto <span aria-hidden="true">↗</span>
+  </a>
+
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+    <span class="sr-only">Abrir menú</span>
+    <span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+  <div class="mobile-menu__meta">
+    <span>ALMAT / CABA</span>
+    <span>DESDE 1996</span>
+  </div>
+  <nav aria-label="Navegación móvil">
+    {nav.map((item, index) => (
+      <a href={item.href} class:list={["mobile-link", { active: isCurrent(item.href) }]}>
+        <span>0{index + 1}</span>{item.label}
+      </a>
+    ))}
+  </nav>
+  <div class="mobile-menu__footer">
+    <a href="https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto." target="_blank" rel="noreferrer">WhatsApp ↗</a>
+    <a href="mailto:almatcerramientos@gmail.com">Email ↗</a>
+  </div>
+</div>
+

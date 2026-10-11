@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ArrowLink from '../components/ArrowLink.astro';
+import heroCity from '../assets/heroes/hero-city.jpg';
+import fachada from '../assets/projects/fachada-moderna.png';
+import instalacion from '../assets/projects/instalacion-balcon.png';
+import showroom from '../assets/projects/lobby-vidrio.png';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="Nosotros | ALMAT Cerramientos" description="Conocé ALMAT: una empresa familiar de Caballito con 30 años de experiencia en aberturas, aluminio, vidrio, PVC y cerramientos.">
+  <PageHero image={heroCity} eyebrow="NOSOTROS / ALMAT" title="Tres décadas transformando espacios." intro="Experiencia, atención personalizada y una mirada precisa sobre cada proyecto." position="center 55%" />
+
+  <section class="section light-section">
+    <div class="wrap editorial-split">
+      <p class="eyebrow reveal-up">NUESTRA HISTORIA</p>
+      <div class="editorial-split__body">
+        <p class="body-large reveal-title">ALMAT es una empresa familiar con 30 años de trayectoria, nacida en el barrio de Caballito, Buenos Aires.</p>
+        <div class="editorial-split__columns">
+          <p data-reveal>Nos especializamos en fabricación e instalación de aberturas y cerramientos de aluminio, desarrollando soluciones para distintos tipos de espacios y proyectos residenciales y comerciales.</p>
+          <p data-reveal data-reveal-delay="1">Trabajamos también con vidrio, espejos, templados, sistemas corredizos y plegadizos, PVC y doble vidriado hermético, seleccionando la alternativa adecuada para cada necesidad.</p>
+        </div>
+      </div>
+    </div>
+    <div class="feature-image">
+      <Image src={fachada} alt="Edificio residencial contemporáneo con balcones vidriados" widths={[720, 1200, 1800]} sizes="100vw" loading="lazy" data-parallax />
+    </div>
+  </section>
+
+  <section class="section light-section">
+    <div class="wrap method-grid">
+      <div class="method-grid__image" data-reveal>
+        <Image src={instalacion} alt="Equipo trabajando en la instalación de una abertura" widths={[560, 900, 1200]} sizes="(max-width: 960px) 100vw, 50vw" loading="lazy" />
+      </div>
+      <div class="method-grid__copy">
+        <p class="eyebrow reveal-up">NUESTRA FORMA DE TRABAJAR</p>
+        <h2 class="section-title reveal-title">El detalle define el resultado.</h2>
+        <p class="body-large reveal-up">Cada proyecto comienza por entender el espacio, el uso y las expectativas. La experiencia orienta la elección de materiales, aperturas, vidrios y terminaciones.</p>
+        <div class="method-steps">
+          <div class="method-step" data-reveal><span>01</span><p>Escucha y asesoramiento para interpretar cada necesidad.</p></div>
+          <div class="method-step" data-reveal><span>02</span><p>Selección de sistemas y materiales adecuados al proyecto.</p></div>
+          <div class="method-step" data-reveal><span>03</span><p>Fabricación e instalación con atención a encuentros y terminaciones.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark-section">
+    <div class="wrap editorial-split">
+      <p class="eyebrow reveal-up">MATERIALES Y PROVEEDORES</p>
+      <div class="editorial-split__body">
+        <h2 class="section-title reveal-title">Sistemas elegidos para responder con precisión.</h2>
+        <p class="body-large reveal-up" style="margin-top:2.5rem">ALMAT trabaja con empresas proveedoras y sistemas reconocidos en el mercado: Aluar, Metales del Talar, herrajes Tanit y Giesse. Además, integra la Red Ekoglass para la instalación de doble vidriado hermético.</p>
+        <div class="partner-names reveal-up"><span>Aluar</span><span>Metales del Talar</span><span>Tanit</span><span>Giesse</span><span>Red Ekoglass</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="showroom-band light-section">
+    <div class="showroom-band__image">
+      <Image src={showroom} alt="Interior luminoso con vidrio, acero y escalera escultórica" widths={[720, 1100, 1500]} sizes="(max-width: 960px) 100vw, 60vw" loading="lazy" />
+    </div>
+    <div class="showroom-band__copy">
+      <p class="eyebrow reveal-up">NUESTRO SHOWROOM</p>
+      <h2 class="section-title reveal-title">Conocé las soluciones de cerca.</h2>
+      <p class="showroom-address reveal-up">Av. Raúl Scalabrini Ortiz 1022<br />CABA, Buenos Aires</p>
+      <ArrowLink href={`${base}/contacto/`} label="Cómo llegar y consultar" />
+    </div>
+  </section>
+</BaseLayout>
+

@@ -1,0 +1,22 @@
+---
+import { Image } from 'astro:assets';
+interface Props {
+  image: ImageMetadata;
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  position?: string;
+}
+const { image, eyebrow, title, intro, position = 'center' } = Astro.props;
+---
+<section class="page-hero dark-zone">
+  <Image class="page-hero__image" src={image} alt="" widths={[720, 1200, 1920]} sizes="100vw" loading="eager" fetchpriority="high" style={`object-position:${position}`} />
+  <div class="page-hero__shade"></div>
+  <div class="page-hero__content wrap">
+    <p class="eyebrow reveal-up">{eyebrow}</p>
+    <h1 class="display-title reveal-title">{title}</h1>
+    {intro && <p class="page-hero__intro reveal-up">{intro}</p>}
+  </div>
+  <span class="page-hero__index">ALMAT / 1996—2026</span>
+</section>
+
