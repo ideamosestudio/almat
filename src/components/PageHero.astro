@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import ActionLink from './ActionLink.astro';
 interface Props {
   image: ImageMetadata;
-  eyebrow: string;
   title: string;
   intro?: string;
   position?: string;
@@ -13,7 +12,6 @@ interface Props {
 }
 const {
   image,
-  eyebrow,
   title,
   intro,
   position = 'center',
@@ -27,7 +25,6 @@ const {
   <div class="page-hero__shade"></div>
   <div class="page-hero__content wrap">
     <div class="page-hero__heading">
-      <p class="eyebrow reveal-up">{eyebrow}</p>
       <h1 class="display-title reveal-title">{title}</h1>
     </div>
     {(intro || primaryCta || secondaryCta) && (

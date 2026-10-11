@@ -45,7 +45,6 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     </div>
     <div class="home-hero__content wrap">
       <div class="home-hero__heading">
-        <p class="eyebrow home-hero__eyebrow reveal-up">ALMAT / ABERTURAS Y CERRAMIENTOS</p>
         <h1 class="home-hero__title reveal-title">Espacios que abren nuevas posibilidades.</h1>
       </div>
       <div class="home-hero__lower reveal-up" data-reveal-delay="2">
@@ -60,17 +59,17 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
   </section>
 
   <section class="factory-statement light-section">
-    <div class="wrap">
-      <p class="eyebrow reveal-up">DISEÑO, VENTA Y COLOCACIÓN</p>
-      <h2 class="factory-statement__title reveal-title">Somos una fábrica de aberturas de alta prestación.</h2>
-      <div class="factory-statement__lower">
+    <div class="wrap factory-statement__grid">
+      <div class="factory-statement__content">
+        <p class="eyebrow reveal-up">DISEÑO, VENTA Y COLOCACIÓN</p>
+        <h2 class="factory-statement__title reveal-title">Somos una fábrica de aberturas de alta prestación.</h2>
         <div class="factory-statement__copy reveal-up">
           <p>Hace 30 años fabricamos e instalamos soluciones que combinan precisión, materiales de calidad y atención personalizada para proyectos residenciales y comerciales.</p>
           <ActionLink href={whatsapp} label="Contactanos hoy" external />
         </div>
-        <div class="factory-statement__image" data-reveal>
-          <Image src={fachadaOndulada} alt="Fachada residencial con balcones y paños vidriados" widths={[620, 960, 1300]} sizes="(max-width: 760px) 100vw, 50vw" loading="lazy" data-parallax />
-        </div>
+      </div>
+      <div class="factory-statement__image" data-reveal>
+        <Image src={fachadaOndulada} alt="Fachada residencial con balcones y paños vidriados" widths={[620, 960, 1300]} sizes="(max-width: 760px) 100vw, 55vw" loading="lazy" data-parallax />
       </div>
     </div>
   </section>
@@ -134,7 +133,6 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
           <a href={`${base}/servicios/#servicio-${index + 1}`} class="service-row" data-service-row>
             <span class="service-row__number">0{index + 1}</span>
             <h3>{service.title}</h3>
-            <span class="service-row__arrow" aria-hidden="true">↗</span>
           </a>
         ))}
       </div>

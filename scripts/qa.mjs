@@ -32,8 +32,12 @@ for (const [profile, width, height] of profiles) {
     if (h1Count !== 1) errors.push(`${profile}/${route || 'home'}: expected one H1, found ${h1Count}`);
     const heroCtaCount = await page.locator('.page-hero .cta, .home-hero .cta').count();
     if (heroCtaCount < 1) errors.push(`${profile}/${route || 'home'}: hero has no CTA`);
+    const heroEyebrows = await page.locator('.page-hero .eyebrow, .home-hero .eyebrow').count();
+    if (heroEyebrows) errors.push(`${profile}/${route || 'home'}: hero still contains an eyebrow`);
     const emptyCtas = await page.locator('.cta').evaluateAll((links) => links.filter((link) => !link.textContent?.trim() || (link instanceof HTMLAnchorElement && !link.getAttribute('href'))).length);
     if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
+    const invalidCtas = await page.locator('.cta').evaluateAll((items) => items.filter((item) => getComputedStyle(item).borderTopWidth !== '3px' || item.textContent?.includes('↗')).length);
+    if (invalidCtas) errors.push(`${profile}/${route || 'home'}: ${invalidCtas} CTA(s) have an invalid border or arrow`);
     await page.waitForTimeout(900);
     const sections = await page.locator('main > section').all();
     for (const section of sections) {

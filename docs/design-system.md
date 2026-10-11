@@ -16,7 +16,7 @@ Las clases reutilizables principales son `.display-title`, `.section-title`, `.l
 
 ## Composición
 
-`PageHero.astro` admite las variantes `left`, `center` y `split`. Todas mantienen la secuencia eyebrow, H1, descripción y acciones. En pantallas angostas, `split` pasa a una única columna.
+`PageHero.astro` admite las variantes `left`, `center` y `split`. Las portadas actuales usan un único bloque alineado a la izquierda: H1, descripción breve y acciones. No llevan eyebrow. La descripción usa una escala 25% menor y un ancho pensado para ocupar dos líneas en desktop.
 
 Para módulos editoriales se usa `.section-composition` junto con `.section-composition--split` y `.section-support`. El CTA debe permanecer dentro de `.section-support`, junto al texto que explica la acción.
 
@@ -27,10 +27,10 @@ Las fotografías independientes ocupan el ancho de su contenedor y comienzan sob
 `ActionLink.astro` concentra todas las acciones enlazadas:
 
 - `primary`: botón transparente con borde de 3 px.
-- `secondary`: enlace editorial subrayado.
+- `secondary`: segunda acción con el mismo borde de 3 px.
 - `light`: variante para fondos oscuros o fotográficos.
 
-Las acciones relacionadas se agrupan con `.cta-group`. El formulario reutiliza las clases visuales `.cta` y `.cta--primary` para conservar el mismo lenguaje.
+Las acciones relacionadas se agrupan con `.cta-group`. Todos los botones invierten fondo y texto al pasar el mouse y prescinden de iconos de flecha. El formulario reutiliza las clases visuales `.cta` y `.cta--primary` para conservar el mismo lenguaje.
 
 ## Espaciado
 
