@@ -32,8 +32,24 @@ for (const [profile, width, height] of profiles) {
     if (h1Count !== 1) errors.push(`${profile}/${route || 'home'}: expected one H1, found ${h1Count}`);
     const heroCtaCount = await page.locator('.page-hero .cta, .home-hero .cta').count();
     if (heroCtaCount < 1) errors.push(`${profile}/${route || 'home'}: hero has no CTA`);
-    const heroEyebrows = await page.locator('.page-hero .eyebrow, .home-hero .eyebrow').count();
-    if (heroEyebrows) errors.push(`${profile}/${route || 'home'}: hero still contains an eyebrow`);
+    const heroEyebrows = await page.locator('.page-hero .eyebrow, .home-hero .eyebrow').allTextContents();
+    if (heroEyebrows.length !== 1 || heroEyebrows[0].trim() !== 'ABERTURAS Y CERRAMIENTOS') errors.push(`${profile}/${route || 'home'}: hero eyebrow is missing or incorrect`);
+    const heroBox = await page.locator('.page-hero, .home-hero').evaluate((hero) => {
+      const heading = hero.querySelector('.page-hero__heading, .home-hero__heading');
+      const support = hero.querySelector('.page-hero__support, .home-hero__lower');
+      if (!(heading instanceof HTMLElement) || !(support instanceof HTMLElement)) return null;
+      const headingRect = heading.getBoundingClientRect();
+      const supportRect = support.getBoundingClientRect();
+      const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0;
+      const stackTop = headingRect.top;
+      const stackBottom = supportRect.bottom;
+      return {
+        boundaryDelta: Math.abs(headingRect.right - supportRect.right),
+        centerDelta: Math.abs((stackTop + stackBottom) / 2 - (headerHeight + (innerHeight - headerHeight) / 2))
+      };
+    });
+    if (!heroBox || heroBox.boundaryDelta > 2) errors.push(`${profile}/${route || 'home'}: hero content does not share one right boundary`);
+    if (heroBox && heroBox.centerDelta > 56) errors.push(`${profile}/${route || 'home'}: hero content is not vertically centered`);
     const emptyCtas = await page.locator('.cta').evaluateAll((links) => links.filter((link) => !link.textContent?.trim() || (link instanceof HTMLAnchorElement && !link.getAttribute('href'))).length);
     if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
     const invalidCtas = await page.locator('.cta').evaluateAll((items) => items.filter((item) => getComputedStyle(item).borderTopWidth !== '3px' || item.textContent?.includes('↗')).length);
@@ -55,7 +71,7 @@ for (const [profile, width, height] of profiles) {
     }
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(200);
-    await page.screenshot({ path: new URL(`${route.replace('/', '') || 'home'}-${profile}.png`, root).pathname.slice(1), fullPage: true });
+    await page.screenshot({ path: new URL(`${route.replace('/', '') || 'home'}-${profile}.png`, root).pathname.slice(1), fullPage: false });
   }
   await page.close();
 }
