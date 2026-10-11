@@ -26,7 +26,7 @@
   --space-7: clamp(4rem, 6vw, 6rem);
   --content-narrow: 34rem;
   --content-copy: 42rem;
-  --hero-box-width: clamp(26rem, 34vw, 28rem);
+  --hero-box-width: min(40rem, calc(50vw - var(--gutter)));
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -372,6 +372,7 @@ h1, h2, h3, p { margin: 0; }
 @keyframes scrollLine { 0%, 100% { transform: scaleX(.2); opacity: .45; } 50% { transform: scaleX(1); opacity: 1; } }
 
 @media (max-width: 960px) {
+  :root { --hero-box-width: calc(100vw - (2 * var(--gutter))); }
   .desktop-nav, .desktop-only { display: none; }
   .site-header { grid-template-columns: 1fr auto; }
   .menu-toggle { display: block; }
@@ -406,7 +407,6 @@ h1, h2, h3, p { margin: 0; }
     --type-display: clamp(2.5rem, 10.5vw, 3.3rem);
     --type-h2: clamp(2.35rem, 10.5vw, 3.25rem);
     --type-h3: clamp(1.45rem, 6.8vw, 2rem);
-    --hero-box-width: 100%;
   }
   .site-header { height: 5rem; }
   .site-header.is-scrolled { height: 4.25rem; }
