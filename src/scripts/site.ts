@@ -25,6 +25,26 @@ const initHeader = () => {
   });
 };
 
+const initHeroCopyWidths = () => {
+  const heroes = Array.from(document.querySelectorAll<HTMLElement>('.page-hero, .home-hero'));
+  if (!heroes.length) return;
+
+  const sync = () => {
+    heroes.forEach((hero) => {
+      const title = hero.querySelector<HTMLElement>('[data-hero-title]');
+      const intro = hero.querySelector<HTMLElement>('[data-hero-intro]');
+      if (!title || !intro) return;
+      const range = document.createRange();
+      range.selectNodeContents(title);
+      const widestTitleLine = Math.max(...Array.from(range.getClientRects(), (rect) => rect.width));
+      intro.style.setProperty('--hero-title-line-width', `${Math.ceil(widestTitleLine)}px`);
+    });
+  };
+
+  document.fonts.ready.then(sync);
+  window.addEventListener('resize', sync, { passive: true });
+};
+
 const initReveals = () => {
   const targets = document.querySelectorAll<HTMLElement>('[data-reveal], .reveal-up');
   const titles = document.querySelectorAll<HTMLElement>('.reveal-title');
@@ -152,6 +172,7 @@ const initForm = () => {
 };
 
 initHeader();
+initHeroCopyWidths();
 initReveals();
 initParallax();
 initServiceList();

@@ -46,10 +46,10 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="home-hero__content wrap">
       <div class="home-hero__heading">
         <p class="eyebrow home-hero__eyebrow reveal-up">ABERTURAS Y CERRAMIENTOS</p>
-        <h1 class="home-hero__title reveal-title">Espacios que abren nuevas posibilidades.</h1>
+        <h1 class="home-hero__title reveal-title" data-hero-title>Espacios que abren nuevas posibilidades.</h1>
       </div>
       <div class="home-hero__lower reveal-up" data-reveal-delay="2">
-        <p class="home-hero__copy">Diseñamos, fabricamos e instalamos aberturas y cerramientos con precisión, diseño y calidad.</p>
+        <p class="home-hero__copy" data-hero-intro>Fabricamos aberturas y cerramientos con precisión, diseño y calidad.</p>
         <div class="cta-group">
           <ActionLink href={whatsapp} label="Solicitar presupuesto" light external />
           <ActionLink href={`${base}/servicios/`} label="Conocé nuestros servicios" variant="secondary" light />

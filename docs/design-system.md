@@ -16,7 +16,7 @@ Las clases reutilizables principales son `.display-title`, `.section-title`, `.l
 
 ## Composición
 
-`PageHero.astro` admite las variantes `left`, `center` y `split`. Las portadas actuales usan un único bloque alineado a la izquierda: eyebrow “ABERTURAS Y CERRAMIENTOS”, H1, descripción breve y acciones. Todos esos elementos comparten el mismo límite derecho y el conjunto se centra verticalmente en el primer viewport. En desktop la caja nunca supera el eje medio de la pantalla; el título ocupa como máximo tres líneas y la descripción, como máximo dos. En pantallas angostas la caja aprovecha el ancho disponible conservando esos límites de líneas.
+`PageHero.astro` admite las variantes `left`, `center` y `split`. Las portadas actuales usan un único bloque alineado a la izquierda: eyebrow “ABERTURAS Y CERRAMIENTOS”, H1, descripción breve y acciones. En desktop la caja nunca supera el eje medio de la pantalla; el título ocupa como máximo tres líneas y la descripción, como máximo dos. La bajada se compone en Roboto Light, 2 px por encima de la escala base, y su ancho se sincroniza con la línea más larga del título para que nunca la exceda. El eyebrow usa 1 px adicional y el H1 una escala 20% mayor.
 
 Para módulos editoriales se usa `.section-composition` junto con `.section-composition--split` y `.section-support`. El CTA debe permanecer dentro de `.section-support`, junto al texto que explica la acción.
 

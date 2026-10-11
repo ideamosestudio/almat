@@ -44,6 +44,9 @@ for (const [profile, width, height] of profiles) {
       const supportRect = support.getBoundingClientRect();
       const titleStyle = getComputedStyle(title);
       const introStyle = getComputedStyle(intro);
+      const titleRange = document.createRange();
+      titleRange.selectNodeContents(title);
+      const widestTitleLine = Math.max(...Array.from(titleRange.getClientRects(), (rect) => rect.width));
       const titleLines = Math.round(title.getBoundingClientRect().height / parseFloat(titleStyle.lineHeight));
       const introLines = Math.round(intro.getBoundingClientRect().height / parseFloat(introStyle.lineHeight));
       const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0;
@@ -54,6 +57,10 @@ for (const [profile, width, height] of profiles) {
         centerDelta: Math.abs((stackTop + stackBottom) / 2 - (headerHeight + (innerHeight - headerHeight) / 2)),
         titleLines,
         introLines,
+        introWidth: intro.getBoundingClientRect().width,
+        widestTitleLine,
+        introFontFamily: introStyle.fontFamily,
+        introFontWeight: introStyle.fontWeight,
         crossesMidpoint: innerWidth > 960 && headingRect.right > innerWidth / 2 + 2
       };
     });
@@ -61,6 +68,8 @@ for (const [profile, width, height] of profiles) {
     if (heroBox && heroBox.centerDelta > 56) errors.push(`${profile}/${route || 'home'}: hero content is not vertically centered`);
     if (heroBox && heroBox.titleLines > 3) errors.push(`${profile}/${route || 'home'}: hero title uses ${heroBox.titleLines} lines`);
     if (heroBox && heroBox.introLines > 2) errors.push(`${profile}/${route || 'home'}: hero intro uses ${heroBox.introLines} lines`);
+    if (heroBox && heroBox.introWidth > heroBox.widestTitleLine + 2) errors.push(`${profile}/${route || 'home'}: hero intro is wider than the title`);
+    if (heroBox && (!heroBox.introFontFamily.toLowerCase().includes('roboto') || heroBox.introFontWeight !== '300')) errors.push(`${profile}/${route || 'home'}: hero intro is not Roboto Light`);
     if (heroBox?.crossesMidpoint) errors.push(`${profile}/${route || 'home'}: hero box crosses the viewport midpoint`);
     const emptyCtas = await page.locator('.cta').evaluateAll((links) => links.filter((link) => !link.textContent?.trim() || (link instanceof HTMLAnchorElement && !link.getAttribute('href'))).length);
     if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
