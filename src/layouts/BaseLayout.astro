@@ -5,6 +5,7 @@ import '@fontsource/dm-sans/500.css';
 import '@fontsource/roboto/300.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -40,6 +41,7 @@ const socialImage = image ?? `${base}/brand/almat-logo-black.png`;
     <Header />
     <main id="contenido"><slot /></main>
     <Footer />
+    <WhatsAppButton />
     <script>
       import '../scripts/site.ts';
     </script>

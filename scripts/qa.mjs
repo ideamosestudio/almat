@@ -9,14 +9,18 @@ const browser = await chromium.launch({
   headless: true
 });
 
-const profiles = [
+const allProfiles = [
   ['desktop', 1440, 1100],
   ['laptop', 1024, 900],
   ['tablet', 768, 1024],
   ['mobile', 390, 844]
 ];
+const requestedProfile = process.argv.find((argument) => argument.startsWith('--profile='))?.split('=')[1];
+const profiles = requestedProfile ? allProfiles.filter(([profile]) => profile === requestedProfile) : allProfiles;
+if (!profiles.length) throw new Error(`Unknown QA profile: ${requestedProfile}`);
 const routes = ['', 'nosotros/', 'servicios/', 'contacto/'];
 const errors = [];
+const whatsappUrl = 'https://wa.me/5491127332222?text=Hola%2C%20%C2%BFc%C3%B3mo%20est%C3%A1n%3F%20Quisiera%20consultar%20por%20cerramientos%20en%20ALMAT%20Cerramientos.%20%C2%BFMe%20podr%C3%ADan%20asesorar%3F';
 
 for (const [profile, width, height] of profiles) {
   const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 });
@@ -75,12 +79,55 @@ for (const [profile, width, height] of profiles) {
     if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
     const invalidCtas = await page.locator('.cta').evaluateAll((items) => items.filter((item) => getComputedStyle(item).borderTopWidth !== '3px' || item.textContent?.includes('↗')).length);
     if (invalidCtas) errors.push(`${profile}/${route || 'home'}: ${invalidCtas} CTA(s) have an invalid border or arrow`);
+    const whatsappButton = await page.locator('.whatsapp-float').evaluate((button) => {
+      const image = button.querySelector('img');
+      const style = getComputedStyle(button);
+      const rect = button.getBoundingClientRect();
+      return {
+        href: button.getAttribute('href'),
+        target: button.getAttribute('target'),
+        rel: button.getAttribute('rel'),
+        label: button.getAttribute('aria-label'),
+        position: style.position,
+        right: Math.round(innerWidth - rect.right),
+        bottom: Math.round(innerHeight - rect.bottom),
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        imageLoaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth === 272 && image.naturalHeight === 272
+      };
+    });
+    const expectedButton = width <= 640
+      ? { size: 56, right: 20, bottom: 20 }
+      : width <= 960
+        ? { size: 62, right: 24, bottom: 24 }
+        : { size: 68, right: 30, bottom: 30 };
+    if (whatsappButton.href !== whatsappUrl) errors.push(`${profile}/${route || 'home'}: floating WhatsApp URL is incorrect`);
+    if (whatsappButton.target !== '_blank' || whatsappButton.rel !== 'noopener noreferrer') errors.push(`${profile}/${route || 'home'}: floating WhatsApp link attributes are incorrect`);
+    if (whatsappButton.label !== 'Escribinos por WhatsApp a ALMAT Cerramientos') errors.push(`${profile}/${route || 'home'}: floating WhatsApp aria-label is incorrect`);
+    if (whatsappButton.position !== 'fixed') errors.push(`${profile}/${route || 'home'}: WhatsApp button is not fixed`);
+    if (whatsappButton.width !== expectedButton.size || whatsappButton.height !== expectedButton.size || whatsappButton.right !== expectedButton.right || whatsappButton.bottom !== expectedButton.bottom) errors.push(`${profile}/${route || 'home'}: WhatsApp button has incorrect responsive geometry`);
+    if (!whatsappButton.imageLoaded) errors.push(`${profile}/${route || 'home'}: WhatsApp image did not load at the optimized dimensions`);
     await page.waitForTimeout(900);
+    if (width > 960) {
+      await page.locator('.whatsapp-float').hover();
+      await page.waitForTimeout(300);
+      const tooltipOpacity = await page.locator('.whatsapp-float__tooltip').evaluate((tooltip) => getComputedStyle(tooltip).opacity);
+      if (tooltipOpacity !== '1') errors.push(`${profile}/${route || 'home'}: WhatsApp tooltip is not visible on hover`);
+      await page.mouse.move(0, 0);
+    } else {
+      const tooltipDisplay = await page.locator('.whatsapp-float__tooltip').evaluate((tooltip) => getComputedStyle(tooltip).display);
+      if (tooltipDisplay !== 'none') errors.push(`${profile}/${route || 'home'}: WhatsApp tooltip should be hidden on touch layouts`);
+    }
     const sections = await page.locator('main > section').all();
     for (const section of sections) {
       await section.scrollIntoViewIfNeeded();
       await page.waitForTimeout(100);
     }
+    const floatingButtonVisible = await page.locator('.whatsapp-float').evaluate((button) => {
+      const rect = button.getBoundingClientRect();
+      return rect.top >= 0 && rect.left >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight && getComputedStyle(button).visibility === 'visible';
+    });
+    if (!floatingButtonVisible) errors.push(`${profile}/${route || 'home'}: WhatsApp button is not visible after scrolling`);
     if (route === '') {
       const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
       if (whatsappCtas.length < 12) errors.push(`${profile}/home: expected at least 12 WhatsApp CTAs, found ${whatsappCtas.length}`);
@@ -102,4 +149,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('QA passed: 4 routes × 4 viewports, one H1 per page, functional CTAs, no console errors or horizontal overflow.');
+console.log(`QA passed: ${routes.length} routes × ${profiles.length} viewport${profiles.length === 1 ? '' : 's'}, functional CTAs, floating WhatsApp button, no console errors or horizontal overflow.`);
