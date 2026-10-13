@@ -154,6 +154,34 @@ for (const [profile, width, height] of profiles) {
       if (width <= 640 && await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be hidden on mobile`);
       if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
       if (await page.locator('.services-feature .cta').count()) errors.push(`${profile}/home: removed services feature CTA is still present`);
+      const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
+        sources: items.map((item) => item.querySelector('img')?.currentSrc),
+        rects: items.map((item) => {
+          const rect = item.getBoundingClientRect();
+          return { top: Math.round(rect.top), bottom: Math.round(rect.bottom), left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width), height: Math.round(rect.height) };
+        })
+      }));
+      if (galleryLayout.rects.length !== 5 || new Set(galleryLayout.sources).size !== 5) errors.push(`${profile}/home: gallery should contain 5 unique images`);
+      if (width > 640) {
+        const [first, second, third, fourth, landscape] = galleryLayout.rects;
+        const alignedPairs = first.top === second.top && third.top === fourth.top && first.height === second.height && third.height === fourth.height;
+        const balancedColumns = first.width === second.width && third.width === fourth.width && first.left === third.left && second.right === fourth.right;
+        const fullWidthLandscape = landscape.left === first.left && landscape.right === second.right && landscape.top > third.top;
+        if (!alignedPairs || !balancedColumns || !fullWidthLandscape) errors.push(`${profile}/home: gallery does not use two balanced 2-image columns plus a full-width landscape image`);
+      }
+      const reviewsSection = await page.locator('.reviews-section').evaluate((section) => ({
+        title: section.querySelector('h2')?.textContent?.trim(),
+        reviews: Array.from(section.querySelectorAll('.review-item'), (review) => ({
+          quote: review.querySelector('blockquote')?.textContent?.trim(),
+          source: review.querySelector('.review-item__source')?.textContent?.trim()
+        })),
+        rating: section.querySelector('.reviews-section__rating')?.getAttribute('aria-label'),
+        link: section.querySelector('.reviews-section__footer a')?.getAttribute('href')
+      }));
+      if (reviewsSection.title !== 'La confianza se construye en cada proyecto.' || reviewsSection.reviews.length !== 3) errors.push(`${profile}/home: Google reviews section content is incomplete`);
+      if (reviewsSection.reviews.some(({ quote, source }) => !quote || source !== 'Opinión de 5 estrellas en Google')) errors.push(`${profile}/home: a Google review is missing its quote or attribution`);
+      if (reviewsSection.rating !== 'Calificación de 4,8 sobre 5 basada en 129 opiniones en Google') errors.push(`${profile}/home: Google review rating is incorrect`);
+      if (reviewsSection.link !== 'https://share.google/H2V3YCetLLZqCp11D') errors.push(`${profile}/home: Google reviews source link is incorrect`);
       if (width > 960) {
         const servicesTitleLines = await page.locator('.services-head .section-title').evaluate((title) => {
           const style = getComputedStyle(title);
@@ -176,6 +204,7 @@ for (const [profile, width, height] of profiles) {
       await page.locator('.factory-statement').screenshot({ path: new URL(`factory-statement-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.capabilities').screenshot({ path: new URL(`capabilities-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.services-feature').screenshot({ path: new URL(`services-feature-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.reviews-section').screenshot({ path: new URL(`reviews-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.trust').screenshot({ path: new URL(`partners-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.logo-strip').screenshot({ path: new URL(`logo-strip-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.visual-cta').screenshot({ path: new URL(`visual-cta-${profile}.png`, root).pathname.slice(1) });

@@ -7,17 +7,24 @@ import heroMain from '../assets/heroes/hero-sunset.jpg';
 import heroPool from '../assets/heroes/hero-pool.jpg';
 import heroInterior from '../assets/heroes/hero-interior.jpg';
 import heroGolden from '../assets/heroes/hero-golden.jpg';
-import fachadaOndulada from '../assets/projects/fachada-ondulada.png';
 import fachadaModerna from '../assets/projects/fachada-moderna.png';
+import departamentosJardines from '../assets/projects/departamentos-jardines.png';
 import patio from '../assets/projects/patio-vidriado.png';
 import lobby from '../assets/projects/lobby-vidrio.png';
 import balcon from '../assets/projects/balcon-vidriado.png';
 import pergola from '../assets/projects/instalacion-pergola.png';
 import terraza from '../assets/projects/terraza-buenos-aires.png';
 import aberturas from '../assets/projects/instalacion-aberturas.png';
+import jardinInvierno from '../assets/projects/jardin-de-invierno.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
+const googleReviews = 'https://share.google/H2V3YCetLLZqCp11D';
+const reviews = [
+  { name: 'Roberto O.', quote: 'Excelente trabajo. Recomendables cien por ciento.' },
+  { name: "Flavia D' Occhio", quote: 'Los tiempos y la prolijidad fueron excelentes.' },
+  { name: 'Roly Maldonado', quote: 'Excelente atención y aberturas de muy buena calidad.' }
+];
 const services = [
   { title: 'Aberturas de aluminio', image: heroInterior },
   { title: 'Cerramientos de aluminio', image: patio },
@@ -26,11 +33,11 @@ const services = [
   { title: 'Aberturas de PVC', image: aberturas }
 ];
 const gallery = [
-  { image: fachadaOndulada, alt: 'Fachada contemporánea con balcones curvos y cerramientos vidriados' },
   { image: balcon, alt: 'Cerramiento de vidrio en balcón de edificio residencial' },
   { image: patio, alt: 'Comedor vidriado integrado a un patio' },
   { image: fachadaModerna, alt: 'Fachada residencial moderna con balcones de vidrio' },
-  { image: terraza, alt: 'Terraza urbana en Buenos Aires con cubierta vidriada' }
+  { image: terraza, alt: 'Terraza urbana en Buenos Aires con cubierta vidriada' },
+  { image: jardinInvierno, alt: 'Jardín de invierno vidriado durante su instalación' }
 ];
 const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
   ...item,
@@ -73,7 +80,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
         </div>
       </div>
       <div class="factory-statement__image" data-reveal>
-        <Image src={fachadaOndulada} alt="Fachada residencial con balcones y paños vidriados" widths={[620, 960, 1300]} sizes="(max-width: 760px) 100vw, 55vw" loading="lazy" data-parallax />
+        <Image src={departamentosJardines} alt="Edificio residencial contemporáneo rodeado de jardines" widths={[620, 960, 1300]} sizes="(max-width: 760px) 100vw, 55vw" loading="lazy" data-parallax />
       </div>
     </div>
   </section>
@@ -177,6 +184,35 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
       <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Ecología y sustentabilidad</h3><p>El aluminio es un material reciclable que puede reincorporarse a nuevos ciclos productivos conservando sus propiedades.</p></div>
       <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Durabilidad y economía</h3><p>Su resistencia y bajo mantenimiento favorecen una vida útil prolongada y un buen desempeño cotidiano.</p></div>
       <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Seguridad</h3><p>Perfiles, herrajes y vidrios se seleccionan de acuerdo con las necesidades de protección y uso de cada proyecto.</p></div>
+    </div>
+  </section>
+
+  <section class="reviews-section light-section" aria-labelledby="reviews-title">
+    <div class="wrap reviews-section__heading">
+      <div>
+        <p class="eyebrow reveal-up">OPINIONES EN GOOGLE</p>
+        <h2 class="section-title reveal-title" id="reviews-title">La confianza se construye en cada proyecto.</h2>
+      </div>
+      <div class="reviews-section__rating reveal-up" aria-label="Calificación de 4,8 sobre 5 basada en 129 opiniones en Google">
+        <strong>4,8</strong>
+        <div>
+          <span class="reviews-section__stars" aria-hidden="true">★★★★★</span>
+          <p>129 opiniones en Google</p>
+        </div>
+      </div>
+    </div>
+    <div class="wrap reviews-grid">
+      {reviews.map((review, index) => (
+        <article class="review-item" data-reveal data-reveal-delay={index > 0 ? String(index) : undefined}>
+          <span class="review-item__index">0{index + 1}</span>
+          <blockquote>“{review.quote}”</blockquote>
+          <p>{review.name}</p>
+          <span class="review-item__source">Opinión de 5 estrellas en Google</span>
+        </article>
+      ))}
+    </div>
+    <div class="wrap reviews-section__footer reveal-up">
+      <a href={googleReviews} target="_blank" rel="noopener noreferrer">Ver todas las opiniones en Google <span aria-hidden="true">↗</span></a>
     </div>
   </section>
 
