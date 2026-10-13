@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import ActionLink from '../components/ActionLink.astro';
+import PartnerLogos from '../components/PartnerLogos.astro';
 import heroCity from '../assets/heroes/hero-city.jpg';
 import fachada from '../assets/projects/fachada-moderna.png';
 import instalacion from '../assets/projects/instalacion-balcon.png';
@@ -65,7 +66,7 @@ const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20
       <div class="editorial-split__body">
         <h2 class="section-title reveal-title">Sistemas elegidos para responder con precisión.</h2>
         <p class="body-large reveal-up" style="margin-top:2.5rem">ALMAT trabaja con empresas proveedoras y sistemas reconocidos en el mercado: Aluar, Metales del Talar, herrajes Tanit y Giesse. Además, integra la Red Ekoglass para la instalación de doble vidriado hermético.</p>
-        <div class="partner-names reveal-up"><span>Aluar</span><span>Metales del Talar</span><span>Tanit</span><span>Giesse</span><span>Red Ekoglass</span></div>
+        <PartnerLogos />
       </div>
     </div>
   </section>

@@ -14,14 +14,19 @@ const initHeader = () => {
     toggle.setAttribute('aria-expanded', String(open));
     toggle.querySelector('.sr-only')!.textContent = open ? 'Cerrar menú' : 'Abrir menú';
     menu.setAttribute('aria-hidden', String(!open));
+    menu.toggleAttribute('inert', !open);
     menu.classList.toggle('is-open', open);
     header.classList.toggle('menu-open', open);
     document.body.classList.toggle('menu-is-open', open);
+    if (open) menu.querySelector<HTMLAnchorElement>('nav a')?.focus({ preventScroll: true });
   };
   toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setMenu(false);
+    if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      toggle.focus();
+    }
   });
 };
 

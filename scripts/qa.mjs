@@ -58,6 +58,8 @@ for (const [profile, width, height] of profiles) {
       const stackBottom = supportRect.bottom;
       return {
         boundaryDelta: Math.abs(headingRect.right - supportRect.right),
+        leftDelta: Math.abs(headingRect.left - supportRect.left),
+        left: headingRect.left,
         centerDelta: Math.abs((stackTop + stackBottom) / 2 - (headerHeight + (innerHeight - headerHeight) / 2)),
         titleLines,
         introLines,
@@ -69,7 +71,8 @@ for (const [profile, width, height] of profiles) {
       };
     });
     if (!heroBox || heroBox.boundaryDelta > 2) errors.push(`${profile}/${route || 'home'}: hero content does not share one right boundary`);
-    if (heroBox && heroBox.centerDelta > 56) errors.push(`${profile}/${route || 'home'}: hero content is not vertically centered`);
+    if (heroBox && width > 640 && heroBox.centerDelta > 56) errors.push(`${profile}/${route || 'home'}: hero content is not vertically centered`);
+    if (heroBox && width <= 640 && (heroBox.leftDelta > 2 || Math.abs(heroBox.left - width * .08) > 2)) errors.push(`${profile}/${route || 'home'}: mobile hero content is not aligned to the 8% gutter`);
     if (heroBox && heroBox.titleLines > 3) errors.push(`${profile}/${route || 'home'}: hero title uses ${heroBox.titleLines} lines`);
     if (heroBox && heroBox.introLines > 2) errors.push(`${profile}/${route || 'home'}: hero intro uses ${heroBox.introLines} lines`);
     if (heroBox && heroBox.introWidth > heroBox.widestTitleLine + 2) errors.push(`${profile}/${route || 'home'}: hero intro is wider than the title`);
@@ -79,6 +82,18 @@ for (const [profile, width, height] of profiles) {
     if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
     const invalidCtas = await page.locator('.cta').evaluateAll((items) => items.filter((item) => getComputedStyle(item).borderTopWidth !== '3px' || item.textContent?.includes('↗')).length);
     if (invalidCtas) errors.push(`${profile}/${route || 'home'}: ${invalidCtas} CTA(s) have an invalid border or arrow`);
+    const asymmetricCtas = await page.locator('.cta').evaluateAll((items) => items.filter((item) => {
+      const style = getComputedStyle(item);
+      return Math.abs(parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)) > .5;
+    }).length);
+    if (asymmetricCtas) errors.push(`${profile}/${route || 'home'}: ${asymmetricCtas} CTA(s) have asymmetric horizontal padding`);
+    if (width <= 640) {
+      const groupsWithMultipleVisibleCtas = await page.locator('.cta-group').evaluateAll((groups) => groups.filter((group) => Array.from(group.querySelectorAll('.cta')).filter((cta) => getComputedStyle(cta).display !== 'none').length > 1).length);
+      if (groupsWithMultipleVisibleCtas) errors.push(`${profile}/${route || 'home'}: a mobile CTA group shows more than its first action`);
+      const gutter = await page.locator('.wrap').first().evaluate((wrap) => parseFloat(getComputedStyle(wrap).paddingLeft));
+      if (Math.abs(gutter - width * .08) > 1) errors.push(`${profile}/${route || 'home'}: mobile content gutter is not 8%`);
+    }
+    await page.waitForTimeout(900);
     const whatsappButton = await page.locator('.whatsapp-float').evaluate((button) => {
       const image = button.querySelector('img');
       const style = getComputedStyle(button);
@@ -107,7 +122,6 @@ for (const [profile, width, height] of profiles) {
     if (whatsappButton.position !== 'fixed') errors.push(`${profile}/${route || 'home'}: WhatsApp button is not fixed`);
     if (whatsappButton.width !== expectedButton.size || whatsappButton.height !== expectedButton.size || whatsappButton.right !== expectedButton.right || whatsappButton.bottom !== expectedButton.bottom) errors.push(`${profile}/${route || 'home'}: WhatsApp button has incorrect responsive geometry`);
     if (!whatsappButton.imageLoaded) errors.push(`${profile}/${route || 'home'}: WhatsApp image did not load at the optimized dimensions`);
-    await page.waitForTimeout(900);
     if (width > 960) {
       await page.locator('.whatsapp-float').hover();
       await page.waitForTimeout(300);
@@ -130,16 +144,48 @@ for (const [profile, width, height] of profiles) {
     if (!floatingButtonVisible) errors.push(`${profile}/${route || 'home'}: WhatsApp button is not visible after scrolling`);
     if (route === '') {
       const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-      if (whatsappCtas.length < 12) errors.push(`${profile}/home: expected at least 12 WhatsApp CTAs, found ${whatsappCtas.length}`);
+      if (whatsappCtas.length < 11) errors.push(`${profile}/home: expected at least 11 WhatsApp CTAs, found ${whatsappCtas.length}`);
       if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
       const logosLoaded = await page.locator('.logo-strip__logos img').evaluateAll((images) => images.length === 6 && images.every((image) => image.complete && image.naturalWidth > 0));
       if (!logosLoaded) errors.push(`${profile}/home: partner logos did not load correctly`);
+      if (await page.locator('.logo-strip__intro').count()) errors.push(`${profile}/home: removed logo-strip heading or CTA is still present`);
+      const factoryServiceCta = page.locator('.factory-statement__copy .cta[href="/almat/servicios/"]');
+      if (await factoryServiceCta.count() !== 1) errors.push(`${profile}/home: factory services CTA is missing or has an incorrect URL`);
+      if (width <= 640 && await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be hidden on mobile`);
+      if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
+      await page.waitForTimeout(1200);
+      await page.locator('.factory-statement').screenshot({ path: new URL(`factory-statement-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.capabilities').screenshot({ path: new URL(`capabilities-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.services-feature').screenshot({ path: new URL(`services-feature-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.trust').screenshot({ path: new URL(`partners-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.logo-strip').screenshot({ path: new URL(`logo-strip-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.visual-cta').screenshot({ path: new URL(`visual-cta-${profile}.png`, root).pathname.slice(1) });
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.waitForTimeout(250);
+    }
+    if (route === 'nosotros/') {
+      const trustLogosLoaded = await page.locator('.partner-logos img').evaluateAll((images) => images.length === 5 && images.every((image) => image.complete && image.naturalWidth > 0));
+      if (!trustLogosLoaded) errors.push(`${profile}/${route || 'home'}: trust partner logos did not load correctly`);
     }
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(200);
     await page.screenshot({ path: new URL(`${route.replace('/', '') || 'home'}-${profile}.png`, root).pathname.slice(1), fullPage: false });
+    if (width <= 960) {
+      await page.locator('[data-menu-toggle]').click();
+      await page.waitForTimeout(800);
+      const menuState = await page.locator('[data-menu]').evaluate((menu) => ({
+        visible: getComputedStyle(menu).visibility === 'visible',
+        interactive: !menu.hasAttribute('inert'),
+        links: Array.from(menu.querySelectorAll('nav a'), (link) => link.getAttribute('href'))
+      }));
+      const expectedLinks = ['/almat/', '/almat/nosotros/', '/almat/servicios/', '/almat/contacto/'];
+      if (!menuState.visible || !menuState.interactive) errors.push(`${profile}/${route || 'home'}: mobile menu did not open`);
+      if (JSON.stringify(menuState.links) !== JSON.stringify(expectedLinks)) errors.push(`${profile}/${route || 'home'}: mobile menu links are incorrect`);
+      const targetHref = route === '' ? '/almat/contacto/' : '/almat/';
+      await page.locator(`.mobile-link[href="${targetHref}"]`).click();
+      await page.waitForLoadState('domcontentloaded');
+      if (new URL(page.url()).pathname !== targetHref) errors.push(`${profile}/${route || 'home'}: mobile menu link did not navigate`);
+    }
   }
   await page.close();
 }
