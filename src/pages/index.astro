@@ -14,8 +14,8 @@ import lobby from '../assets/projects/lobby-vidrio.png';
 import balcon from '../assets/projects/balcon-vidriado.png';
 import pergola from '../assets/projects/instalacion-pergola.png';
 import terraza from '../assets/projects/terraza-buenos-aires.png';
-import aberturas from '../assets/projects/instalacion-aberturas.png';
 import jardinInvierno from '../assets/projects/jardin-de-invierno.png';
+import pvcDormitorio from '../assets/projects/aberturas-pvc-dormitorio.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
@@ -30,7 +30,7 @@ const services = [
   { title: 'Cerramientos de aluminio', image: patio },
   { title: 'Vidrios, espejos y templados', image: lobby },
   { title: 'Cerramientos vidriados corredizos y plegadizos', image: pergola },
-  { title: 'Aberturas de PVC', image: aberturas }
+  { title: 'Aberturas de PVC', image: pvcDormitorio }
 ];
 const gallery = [
   { image: balcon, alt: 'Cerramiento de vidrio en balcón de edificio residencial' },
@@ -115,7 +115,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="wrap capabilities__head">
       <div class="capabilities__support">
         <p class="eyebrow reveal-up">LO QUE HACEMOS</p>
-        <h2 class="section-title reveal-title">Cuatro soluciones. Una misma precisión.</h2>
+        <h2 class="section-title reveal-title">Cinco soluciones. Una misma precisión.</h2>
       </div>
     </div>
     <div class="wrap capabilities-grid">
@@ -142,6 +142,12 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
         <span>04</span><h3>Cerramientos corredizos y plegadizos de vidrio</h3>
         <p>Instalamos sistemas vidriados que conectan y transforman ambientes interiores y exteriores.</p>
         <ActionLink href={whatsapp} label="Solicitar presupuesto" external />
+      </article>
+      <article class="capability-card" data-reveal data-reveal-delay="4">
+        <div class="capability-card__image"><Image src={pvcDormitorio} alt="Abertura de PVC blanca en un dormitorio con vista al jardín" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 20vw" loading="lazy" /></div>
+        <span>05</span><h3>Aberturas de PVC</h3>
+        <p>Fabricamos aberturas de PVC a medida para mejorar el aislamiento térmico y acústico.</p>
+        <ActionLink href={whatsapp} label="Consultar por PVC" external />
       </article>
     </div>
   </section>
@@ -199,19 +205,21 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
   </section>
 
   <section class="benefits dark-section">
-    <div class="wrap benefits__top section-composition section-composition--split">
-      <div class="section-support">
-        <p class="eyebrow reveal-up">DISEÑO Y PRESTACIONES</p>
-        <h2 class="section-title reveal-title">Belleza que también se siente.</h2>
-        <p class="lead reveal-up">Elegir bien perfiles, vidrios y sistemas mejora el uso cotidiano de cada ambiente.</p>
-        <div class="cta-group reveal-up"><ActionLink href={whatsapp} label="Elegir la solución adecuada" light external /></div>
+    <div class="wrap benefits__layout">
+      <div class="benefits__top">
+        <div class="section-support">
+          <p class="eyebrow reveal-up">DISEÑO Y PRESTACIONES</p>
+          <h2 class="section-title reveal-title">Belleza que también se siente.</h2>
+          <p class="lead reveal-up">Elegir bien perfiles, vidrios y sistemas mejora el uso cotidiano de cada ambiente.</p>
+          <div class="cta-group reveal-up"><ActionLink href={whatsapp} label="Elegir la solución adecuada" light external /></div>
+        </div>
       </div>
-    </div>
-    <div class="wrap benefit-list">
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">01</span><h3>Climatización e insonorización</h3><p>Según la línea, el vidrio y la instalación, una abertura adecuada puede contribuir al aislamiento térmico y acústico de los ambientes.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Ecología y sustentabilidad</h3><p>El aluminio es un material reciclable que puede reincorporarse a nuevos ciclos productivos conservando sus propiedades.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Durabilidad y economía</h3><p>Su resistencia y bajo mantenimiento favorecen una vida útil prolongada y un buen desempeño cotidiano.</p></div>
-      <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Seguridad</h3><p>Perfiles, herrajes y vidrios se seleccionan de acuerdo con las necesidades de protección y uso de cada proyecto.</p></div>
+      <div class="benefit-list">
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">01</span><h3>Climatización e insonorización</h3><p>Según la línea, el vidrio y la instalación, una abertura adecuada puede contribuir al aislamiento térmico y acústico de los ambientes.</p></div>
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Ecología y sustentabilidad</h3><p>El aluminio es un material reciclable que puede reincorporarse a nuevos ciclos productivos conservando sus propiedades.</p></div>
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Durabilidad y economía</h3><p>Su resistencia y bajo mantenimiento favorecen una vida útil prolongada y un buen desempeño cotidiano.</p></div>
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Seguridad</h3><p>Perfiles, herrajes y vidrios se seleccionan de acuerdo con las necesidades de protección y uso de cada proyecto.</p></div>
+      </div>
     </div>
   </section>
 

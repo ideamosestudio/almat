@@ -152,6 +152,22 @@ for (const [profile, width, height] of profiles) {
       if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
       const logosLoaded = await page.locator('.logo-strip__logos img').evaluateAll((images) => images.length === 6 && images.every((image) => image.complete && image.naturalWidth > 0));
       if (!logosLoaded) errors.push(`${profile}/home: partner logos did not load correctly`);
+      const verticalRhythm = await page.evaluate(() => {
+        const logoInner = document.querySelector('.logo-strip__inner');
+        const capabilitiesHead = document.querySelector('.capabilities__head');
+        if (!(logoInner instanceof HTMLElement) || !(capabilitiesHead instanceof HTMLElement)) return null;
+        const logoStyle = getComputedStyle(logoInner);
+        const headStyle = getComputedStyle(capabilitiesHead);
+        return {
+          logoTop: parseFloat(logoStyle.paddingTop),
+          logoBottom: parseFloat(logoStyle.paddingBottom),
+          headTop: parseFloat(headStyle.paddingTop),
+          headBottom: parseFloat(headStyle.paddingBottom)
+        };
+      });
+      const expectedHeadPadding = width <= 640 ? 44 : width <= 960 ? 52 : 64;
+      const expectedLogoPadding = width <= 960 ? 40 : 44;
+      if (!verticalRhythm || verticalRhythm.headTop !== expectedHeadPadding || verticalRhythm.headBottom !== expectedHeadPadding || verticalRhythm.logoTop !== expectedLogoPadding || verticalRhythm.logoBottom !== expectedLogoPadding) errors.push(`${profile}/home: logo strip and capabilities heading do not use the balanced vertical rhythm`);
       if (await page.locator('.logo-strip__intro').count()) errors.push(`${profile}/home: removed logo-strip heading or CTA is still present`);
       const factoryServiceCta = page.locator('.factory-statement__copy .cta[href="/almat/servicios/"]');
       if (await factoryServiceCta.count() !== 1) errors.push(`${profile}/home: factory services CTA is missing or has an incorrect URL`);
@@ -168,12 +184,31 @@ for (const [profile, width, height] of profiles) {
           const top = section.querySelector('.benefits__top')?.getBoundingClientRect();
           const support = section.querySelector('.section-support')?.getBoundingClientRect();
           return top && support ? Math.abs((top.top + top.bottom) / 2 - (support.top + support.bottom) / 2) : 999;
-        })()
+        })(),
+        sideBySide: (() => {
+          const top = section.querySelector('.benefits__top')?.getBoundingClientRect();
+          const list = section.querySelector('.benefit-list')?.getBoundingClientRect();
+          return Boolean(top && list && top.right < list.left && Math.abs((top.top + top.bottom) / 2 - (list.top + list.bottom) / 2) < 3);
+        })(),
+        height: section.getBoundingClientRect().height
       }));
       if (benefitsTheme.background !== 'rgb(20, 21, 19)' || benefitsTheme.color !== 'rgb(238, 234, 225)' || benefitsTheme.rows !== 4 || !benefitsTheme.ctaLight) errors.push(`${profile}/home: benefits section is not fully using the dark theme`);
       if (!benefitsTheme.eyebrowInsideSupport || benefitsTheme.centeredDelta > 2) errors.push(`${profile}/home: benefits eyebrow and content block are not correctly stacked and vertically centered`);
+      if (width > 960 && (!benefitsTheme.sideBySide || benefitsTheme.height > 800)) errors.push(`${profile}/home: benefits should be a compact side-by-side desktop module`);
+      if (width <= 960 && benefitsTheme.sideBySide) errors.push(`${profile}/home: benefits should stack on tablet and mobile`);
       const lateralHomeEyebrows = await page.locator('.capabilities__head > .eyebrow, .work-head > .eyebrow, .benefits__top > .eyebrow').count();
       if (lateralHomeEyebrows) errors.push(`${profile}/home: a section eyebrow is still positioned beside its title`);
+      const capabilities = await page.locator('.capabilities').evaluate((section) => ({
+        title: section.querySelector('h2')?.textContent?.trim(),
+        cards: section.querySelectorAll('.capability-card').length,
+        pvcAlt: section.querySelector('.capability-card:last-child img')?.getAttribute('alt'),
+        pvcImageLoaded: (() => {
+          const image = section.querySelector('.capability-card:last-child img');
+          return image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0;
+        })()
+      }));
+      if (capabilities.title !== 'Cinco soluciones. Una misma precisión.' || capabilities.cards !== 5 || capabilities.pvcAlt !== 'Abertura de PVC blanca en un dormitorio con vista al jardín' || !capabilities.pvcImageLoaded) errors.push(`${profile}/home: PVC capability card is incomplete`);
+      if (await page.locator('.services-feature .service-row').count() !== 5) errors.push(`${profile}/home: services feature should include five solutions`);
       const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
         sources: items.map((item) => item.querySelector('img')?.currentSrc),
         rects: items.map((item) => {
@@ -238,6 +273,14 @@ for (const [profile, width, height] of profiles) {
     if (route === 'nosotros/') {
       const trustLogosLoaded = await page.locator('.partner-logos img').evaluateAll((images) => images.length === 5 && images.every((image) => image.complete && image.naturalWidth > 0));
       if (!trustLogosLoaded) errors.push(`${profile}/${route || 'home'}: trust partner logos did not load correctly`);
+    }
+    if (route === 'servicios/') {
+      const serviceScenes = await page.locator('.service-scene').count();
+      const pvcServiceImage = await page.locator('#servicio-5 img').evaluate((image) => ({
+        alt: image.getAttribute('alt'),
+        loaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0
+      }));
+      if (serviceScenes !== 5 || pvcServiceImage.alt !== 'Abertura de PVC blanca en un dormitorio con vista al jardín' || !pvcServiceImage.loaded) errors.push(`${profile}/servicios: PVC solution is incomplete`);
     }
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForTimeout(200);
