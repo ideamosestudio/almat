@@ -219,8 +219,12 @@ h1, h2, h3, p { margin: 0; }
 
 /* Services feature */
 .services-feature { padding-bottom: 0; }
-.services-head { padding-block: clamp(5rem, 7vw, 7rem) clamp(2rem, 3vw, 3.5rem); }
-.services-head .section-title { margin-top: var(--space-4); }
+.services-head {
+  display: flex; flex-direction: column; align-items: center; padding-block: clamp(5rem, 7vw, 7rem) clamp(3rem, 4vw, 4.5rem);
+  text-align: center;
+}
+.services-head .section-title { max-width: 13ch; margin-top: var(--space-4); }
+.services-head .lead { max-width: 38rem; margin-top: var(--space-5); }
 .service-explorer { display: grid; grid-template-columns: 1fr 1fr; min-height: 46rem; }
 .service-explorer__images { position: relative; overflow: hidden; }
 .service-explorer__image { position: absolute; inset: 0; opacity: 0; transform: scale(1.04); transition: opacity .75s ease, transform 1.2s var(--ease); }

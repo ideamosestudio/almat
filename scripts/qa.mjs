@@ -144,7 +144,7 @@ for (const [profile, width, height] of profiles) {
     if (!floatingButtonVisible) errors.push(`${profile}/${route || 'home'}: WhatsApp button is not visible after scrolling`);
     if (route === '') {
       const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
-      if (whatsappCtas.length < 11) errors.push(`${profile}/home: expected at least 11 WhatsApp CTAs, found ${whatsappCtas.length}`);
+      if (whatsappCtas.length < 10) errors.push(`${profile}/home: expected at least 10 WhatsApp CTAs, found ${whatsappCtas.length}`);
       if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
       const logosLoaded = await page.locator('.logo-strip__logos img').evaluateAll((images) => images.length === 6 && images.every((image) => image.complete && image.naturalWidth > 0));
       if (!logosLoaded) errors.push(`${profile}/home: partner logos did not load correctly`);
@@ -153,6 +153,20 @@ for (const [profile, width, height] of profiles) {
       if (await factoryServiceCta.count() !== 1) errors.push(`${profile}/home: factory services CTA is missing or has an incorrect URL`);
       if (width <= 640 && await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be hidden on mobile`);
       if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
+      if (await page.locator('.services-feature .cta').count()) errors.push(`${profile}/home: removed services feature CTA is still present`);
+      if (width > 960) {
+        const capabilityCopy = await page.locator('.capability-card > p').evaluateAll((paragraphs) => paragraphs.map((paragraph) => {
+          const style = getComputedStyle(paragraph);
+          return {
+            characters: paragraph.textContent?.trim().length ?? 0,
+            words: paragraph.textContent?.trim().split(/\s+/).length ?? 0,
+            lines: Math.round(paragraph.getBoundingClientRect().height / parseFloat(style.lineHeight))
+          };
+        }));
+        if (capabilityCopy.some(({ lines }) => lines > 3)) errors.push(`${profile}/home: a capability description exceeds three lines`);
+        if (Math.max(...capabilityCopy.map(({ characters }) => characters)) - Math.min(...capabilityCopy.map(({ characters }) => characters)) > 10) errors.push(`${profile}/home: capability descriptions are not balanced by character count`);
+        if (Math.max(...capabilityCopy.map(({ words }) => words)) - Math.min(...capabilityCopy.map(({ words }) => words)) > 2) errors.push(`${profile}/home: capability descriptions are not balanced by word count`);
+      }
       await page.waitForTimeout(1200);
       await page.locator('.factory-statement').screenshot({ path: new URL(`factory-statement-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.capabilities').screenshot({ path: new URL(`capabilities-${profile}.png`, root).pathname.slice(1) });
