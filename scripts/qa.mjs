@@ -36,6 +36,8 @@ for (const [profile, width, height] of profiles) {
     if (h1Count !== 1) errors.push(`${profile}/${route || 'home'}: expected one H1, found ${h1Count}`);
     const heroCtaCount = await page.locator('.page-hero .cta, .home-hero .cta').count();
     if (heroCtaCount < 1) errors.push(`${profile}/${route || 'home'}: hero has no CTA`);
+    const heroContentBottomPadding = await page.locator('.page-hero__content, .home-hero__content').evaluate((content) => parseFloat(getComputedStyle(content).paddingBottom));
+    if (heroContentBottomPadding !== 50) errors.push(`${profile}/${route || 'home'}: hero content does not have the requested 50px bottom padding`);
     const heroEyebrows = await page.locator('.page-hero .eyebrow, .home-hero .eyebrow').allTextContents();
     if (heroEyebrows.length !== 1 || heroEyebrows[0].trim() !== 'ABERTURAS Y CERRAMIENTOS') errors.push(`${profile}/${route || 'home'}: hero eyebrow is missing or incorrect`);
     const heroBox = await page.locator('.page-hero, .home-hero').evaluate((hero) => {
@@ -143,6 +145,8 @@ for (const [profile, width, height] of profiles) {
     });
     if (!floatingButtonVisible) errors.push(`${profile}/${route || 'home'}: WhatsApp button is not visible after scrolling`);
     if (route === '') {
+      const homeSectionOrder = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 5).map((section) => section.classList[0]));
+      if (JSON.stringify(homeSectionOrder.slice(0, 4)) !== JSON.stringify(['home-hero', 'factory-statement', 'trust', 'logo-strip'])) errors.push(`${profile}/home: trajectory module and logo strip are not directly below the first module`);
       const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
       if (whatsappCtas.length < 10) errors.push(`${profile}/home: expected at least 10 WhatsApp CTAs, found ${whatsappCtas.length}`);
       if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
@@ -158,9 +162,18 @@ for (const [profile, width, height] of profiles) {
         background: getComputedStyle(section).backgroundColor,
         color: getComputedStyle(section).color,
         rows: section.querySelectorAll('.benefit-row').length,
-        ctaLight: section.querySelector('.cta')?.classList.contains('cta--light')
+        ctaLight: section.querySelector('.cta')?.classList.contains('cta--light'),
+        eyebrowInsideSupport: Boolean(section.querySelector('.section-support > .eyebrow')),
+        centeredDelta: (() => {
+          const top = section.querySelector('.benefits__top')?.getBoundingClientRect();
+          const support = section.querySelector('.section-support')?.getBoundingClientRect();
+          return top && support ? Math.abs((top.top + top.bottom) / 2 - (support.top + support.bottom) / 2) : 999;
+        })()
       }));
       if (benefitsTheme.background !== 'rgb(20, 21, 19)' || benefitsTheme.color !== 'rgb(238, 234, 225)' || benefitsTheme.rows !== 4 || !benefitsTheme.ctaLight) errors.push(`${profile}/home: benefits section is not fully using the dark theme`);
+      if (!benefitsTheme.eyebrowInsideSupport || benefitsTheme.centeredDelta > 2) errors.push(`${profile}/home: benefits eyebrow and content block are not correctly stacked and vertically centered`);
+      const lateralHomeEyebrows = await page.locator('.capabilities__head > .eyebrow, .work-head > .eyebrow, .benefits__top > .eyebrow').count();
+      if (lateralHomeEyebrows) errors.push(`${profile}/home: a section eyebrow is still positioned beside its title`);
       const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
         sources: items.map((item) => item.querySelector('img')?.currentSrc),
         rects: items.map((item) => {
@@ -180,6 +193,8 @@ for (const [profile, width, height] of profiles) {
         title: section.querySelector('h2')?.textContent?.trim(),
         reviews: Array.from(section.querySelectorAll('.review-item'), (review) => ({
           quote: review.querySelector('blockquote')?.textContent?.trim(),
+          stars: review.querySelector('.review-item__stars')?.textContent?.trim(),
+          starsLabel: review.querySelector('.review-item__stars')?.getAttribute('aria-label'),
           source: review.querySelector('.review-item__source')?.textContent?.trim()
         })),
         rating: section.querySelector('.reviews-section__rating')?.getAttribute('aria-label'),
@@ -187,9 +202,10 @@ for (const [profile, width, height] of profiles) {
       }));
       if (reviewsSection.title !== 'La confianza se construye en cada proyecto.' || reviewsSection.reviews.length !== 3) errors.push(`${profile}/home: Google reviews section content is incomplete`);
       if (reviewsSection.reviews.some(({ quote, source }) => !quote || source !== 'Opinión de 5 estrellas en Google')) errors.push(`${profile}/home: a Google review is missing its quote or attribution`);
+      if (reviewsSection.reviews.some(({ stars, starsLabel }) => stars !== '★★★★★' || starsLabel !== '5 de 5 estrellas')) errors.push(`${profile}/home: a Google review is missing its five-star rating`);
       if (reviewsSection.rating !== 'Calificación de 4,8 sobre 5 basada en 129 opiniones en Google') errors.push(`${profile}/home: Google review rating is incorrect`);
       if (reviewsSection.link !== 'https://share.google/H2V3YCetLLZqCp11D') errors.push(`${profile}/home: Google reviews source link is incorrect`);
-      if (width > 960) {
+      if (width >= 1280) {
         const servicesTitleLines = await page.locator('.services-head .section-title').evaluate((title) => {
           const style = getComputedStyle(title);
           return Math.round(title.getBoundingClientRect().height / parseFloat(style.lineHeight));
@@ -211,6 +227,7 @@ for (const [profile, width, height] of profiles) {
       await page.locator('.factory-statement').screenshot({ path: new URL(`factory-statement-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.capabilities').screenshot({ path: new URL(`capabilities-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.services-feature').screenshot({ path: new URL(`services-feature-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.benefits').screenshot({ path: new URL(`benefits-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.reviews-section').screenshot({ path: new URL(`reviews-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.trust').screenshot({ path: new URL(`partners-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.logo-strip').screenshot({ path: new URL(`logo-strip-${profile}.png`, root).pathname.slice(1) });

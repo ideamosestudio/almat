@@ -171,6 +171,7 @@ h1, h2, h3, p { margin: 0; }
 .home-hero__media img { object-fit: cover; object-position: center; animation: heroIn 1.8s var(--ease) both; }
 .home-hero__media::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 18% 55%, rgba(7,8,7,.8), rgba(7,8,7,.38) 37%, transparent 68%), linear-gradient(0deg, rgba(7,8,7,.56), transparent 45%); }
 .home-hero__content { position: relative; z-index: 1; }
+.page-hero__content, .home-hero__content { padding-bottom: 50px; }
 .home-hero__heading, .home-hero__lower { width: min(100%, var(--hero-box-width)); }
 .home-hero__heading { display: flex; flex-direction: column; align-items: flex-start; }
 .home-hero__eyebrow { margin-bottom: var(--space-4); font-size: calc(var(--type-eyebrow) + 1px); }
@@ -207,6 +208,8 @@ h1, h2, h3, p { margin: 0; }
 /* Four capabilities */
 .capabilities { padding-bottom: var(--section); }
 .capabilities__head { display: grid; grid-template-columns: .65fr 1.35fr; gap: 3rem; align-items: start; padding-bottom: clamp(3rem, 6vw, 6rem); }
+.capabilities__support { grid-column: 2; }
+.capabilities__support .section-title { margin-top: var(--space-4); }
 .capabilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line-light); border-left: 1px solid var(--line-light); }
 .capability-card { display: flex; flex-direction: column; min-width: 0; padding: clamp(1rem, 1.8vw, 1.75rem); border-right: 1px solid var(--line-light); border-bottom: 1px solid var(--line-light); }
 .capability-card__image { aspect-ratio: 1/1.05; margin-bottom: 1.4rem; overflow: hidden; background: var(--paper-soft); }
@@ -244,7 +247,8 @@ h1, h2, h3, p { margin: 0; }
 /* Work gallery */
 .work-section { padding: var(--section) 0 clamp(3.6rem, 5.4vw, 6rem); }
 .work-head { margin-bottom: clamp(4rem, 8vw, 8rem); }
-.work-head .section-title { max-width: 12ch; }
+.work-head .section-support { grid-column: 2; }
+.work-head .section-title { max-width: 12ch; margin-top: var(--space-4); }
 .masonry-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 2vw, 2rem); align-items: start; }
 .gallery-item { position: relative; padding: 0; border: 0; background: none; text-align: left; overflow: hidden; }
 .gallery-item:nth-child(-n+4) { aspect-ratio: 4/3; }
@@ -263,8 +267,10 @@ h1, h2, h3, p { margin: 0; }
 .lightbox__controls span { font-size: .68rem; letter-spacing: .12em; }
 
 /* Benefits */
-.benefits { padding: clamp(3.6rem, 5.4vw, 6rem) 0 var(--section); }
-.benefits__top { margin-bottom: clamp(4rem, 8vw, 8rem); }
+.benefits { padding: 0 0 var(--section); }
+.benefits__top { min-height: clamp(34rem, 42vw, 41rem); align-items: center; padding-block: clamp(4rem, 6vw, 6rem); }
+.benefits__top .section-support { grid-column: 2; }
+.benefits__top .section-title { margin-top: var(--space-4); }
 .benefit-list { border-top: 1px solid var(--line-light); }
 .benefit-row { display: grid; grid-template-columns: 5rem 1fr 1fr; gap: 2rem; padding-block: clamp(2rem, 4vw, 3.5rem); border-bottom: 1px solid var(--line-light); }
 .benefit-row__number { font-size: .7rem; letter-spacing: .1em; }
@@ -292,7 +298,8 @@ h1, h2, h3, p { margin: 0; }
 .review-item__index { display: block; margin-bottom: clamp(2.5rem, 4vw, 4rem); font-size: .65rem; letter-spacing: .12em; opacity: .5; }
 .review-item blockquote { min-height: 5.4em; margin: 0; font-size: clamp(1.35rem, 1.85vw, 1.75rem); font-weight: 350; line-height: 1.28; letter-spacing: -.025em; text-wrap: balance; }
 .review-item > p { margin-top: 2rem; font-size: .82rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
-.review-item__source { display: block; margin-top: .35rem; font-size: .7rem; opacity: .56; }
+.review-item__stars { display: block; margin-top: .45rem; font-size: .72rem; letter-spacing: .18em; line-height: 1; }
+.review-item__source { display: block; margin-top: .55rem; font-size: .7rem; opacity: .56; }
 .reviews-section__footer { display: flex; justify-content: flex-end; margin-top: 2rem; }
 .reviews-section__footer a { padding-bottom: .3rem; border-bottom: 1px solid currentColor; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; transition: opacity .25s ease; }
 .reviews-section__footer a:hover { opacity: .58; }
@@ -431,6 +438,7 @@ h1, h2, h3, p { margin: 0; }
   .contact-layout { grid-template-columns: 1fr; }
   .factory-statement__grid { grid-template-columns: 1fr; }
   .capabilities__head { grid-template-columns: 1fr; }
+  .capabilities__support, .work-head .section-support, .benefits__top .section-support { grid-column: 1; }
   .capabilities-grid { grid-template-columns: 1fr 1fr; }
   .capability-card h3, .capability-card p { min-height: 0; }
   .reviews-section__heading { grid-template-columns: 1fr; }
@@ -485,6 +493,7 @@ h1, h2, h3, p { margin: 0; }
   .gallery-item::after { opacity: 1; transform: none; }
   .benefit-row { grid-template-columns: 2rem 1fr; }
   .benefit-row p { grid-column: 2; }
+  .benefits__top { min-height: 0; padding-block: var(--section); }
   .reviews-section__rating { align-items: center; }
   .reviews-section__rating strong { font-size: 4.5rem; }
   .reviews-grid { margin-top: 3.5rem; }
