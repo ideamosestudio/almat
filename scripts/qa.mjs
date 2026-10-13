@@ -155,6 +155,11 @@ for (const [profile, width, height] of profiles) {
       if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
       if (await page.locator('.services-feature .cta').count()) errors.push(`${profile}/home: removed services feature CTA is still present`);
       if (width > 960) {
+        const servicesTitleLines = await page.locator('.services-head .section-title').evaluate((title) => {
+          const style = getComputedStyle(title);
+          return Math.round(title.getBoundingClientRect().height / parseFloat(style.lineHeight));
+        });
+        if (servicesTitleLines !== 1) errors.push(`${profile}/home: services title should use one desktop line`);
         const capabilityCopy = await page.locator('.capability-card > p').evaluateAll((paragraphs) => paragraphs.map((paragraph) => {
           const style = getComputedStyle(paragraph);
           return {

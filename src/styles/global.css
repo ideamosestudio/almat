@@ -225,6 +225,9 @@ h1, h2, h3, p { margin: 0; }
 }
 .services-head .section-title { max-width: 13ch; margin-top: var(--space-4); }
 .services-head .lead { max-width: 38rem; margin-top: var(--space-5); }
+@media (min-width: 961px) {
+  .services-head .section-title { max-width: none; white-space: nowrap; }
+}
 .service-explorer { display: grid; grid-template-columns: 1fr 1fr; min-height: 46rem; }
 .service-explorer__images { position: relative; overflow: hidden; }
 .service-explorer__image { position: absolute; inset: 0; opacity: 0; transform: scale(1.04); transition: opacity .75s ease, transform 1.2s var(--ease); }
