@@ -154,6 +154,21 @@ for (const [profile, width, height] of profiles) {
       if (width <= 640 && await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be hidden on mobile`);
       if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
       if (await page.locator('.services-feature .cta').count()) errors.push(`${profile}/home: removed services feature CTA is still present`);
+      if (await page.locator('.services-head__meta').textContent() !== 'ALUMINIO · VIDRIO · PVC') errors.push(`${profile}/home: services material detail is missing`);
+      const glassDetails = await page.evaluate(() => {
+        const card = document.querySelector('.capability-card');
+        const header = document.querySelector('.site-header');
+        const cardStyle = card ? getComputedStyle(card) : null;
+        const headerStyle = header ? getComputedStyle(header) : null;
+        return {
+          cardBackground: cardStyle?.backgroundImage ?? '',
+          cardShadow: cardStyle?.boxShadow ?? 'none',
+          headerBackground: headerStyle?.backgroundColor ?? '',
+          headerShadow: headerStyle?.boxShadow ?? 'none'
+        };
+      });
+      if (!glassDetails.cardBackground.includes('gradient') || glassDetails.cardShadow === 'none') errors.push(`${profile}/home: capability cards are missing the glass treatment`);
+      if (!glassDetails.headerBackground.startsWith('rgba') || glassDetails.headerShadow === 'none') errors.push(`${profile}/home: scrolled navigation is missing the glass treatment`);
       if (width > 960) {
         const servicesTitleLines = await page.locator('.services-head .section-title').evaluate((title) => {
           const style = getComputedStyle(title);
