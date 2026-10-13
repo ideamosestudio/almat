@@ -25,13 +25,6 @@ const reviews = [
   { name: "Flavia D' Occhio", quote: 'Los tiempos y la prolijidad fueron excelentes!' },
   { name: 'Roly Maldonado', quote: 'Excelente atención y aberturas de varios modelos y muy buena calidad!' }
 ];
-const services = [
-  { title: 'Aberturas de aluminio', image: heroInterior },
-  { title: 'Cerramientos de aluminio', image: patio },
-  { title: 'Vidrios, espejos y templados', image: lobby },
-  { title: 'Cerramientos vidriados corredizos y plegadizos', image: pergola },
-  { title: 'Aberturas de PVC', image: pvcDormitorio }
-];
 const gallery = [
   { image: balcon, alt: 'Cerramiento de vidrio en balcón de edificio residencial' },
   { image: patio, alt: 'Comedor vidriado integrado a un patio' },
@@ -53,7 +46,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="home-hero__content wrap">
       <div class="home-hero__heading">
         <p class="eyebrow home-hero__eyebrow reveal-up">ABERTURAS Y CERRAMIENTOS</p>
-        <h1 class="home-hero__title reveal-title" data-hero-title>Espacios que abren nuevas posibilidades.</h1>
+        <h1 class="home-hero__title reveal-title" data-hero-title>Espacios que abren nuevas posibilidades</h1>
       </div>
       <div class="home-hero__lower reveal-up" data-reveal-delay="2">
         <p class="home-hero__copy" data-hero-intro>Fabricamos aberturas y cerramientos con precisión, diseño y calidad.</p>
@@ -70,7 +63,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="wrap factory-statement__grid">
       <div class="factory-statement__content">
         <p class="eyebrow reveal-up">DISEÑO, VENTA Y COLOCACIÓN</p>
-        <h2 class="factory-statement__title reveal-title">Somos una fábrica de aberturas de alta prestación.</h2>
+        <h2 class="factory-statement__title reveal-title">Somos una fábrica de aberturas de alta prestación</h2>
         <div class="factory-statement__copy reveal-up">
           <p>Hace 30 años fabricamos e instalamos soluciones que combinan precisión, materiales de calidad y atención personalizada para proyectos residenciales y comerciales.</p>
           <div class="cta-group">
@@ -88,11 +81,16 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
   <section class="trust dark-section">
     <div class="trust__visual">
       <Image src={heroPool} alt="Cerramientos vidriados de gran formato en una vivienda contemporánea" widths={[720, 1080, 1440]} sizes="(max-width: 960px) 100vw, 43vw" loading="lazy" />
-      <span class="trust__number">30</span>
+      <div class="trust__milestone" aria-label="30 años de trayectoria">
+        <span class="trust__number" data-count-up="30" aria-hidden="true">30</span>
+        <span class="trust__unit" aria-hidden="true">AÑOS</span>
+        <span class="trust__progress" aria-hidden="true"></span>
+        <span class="trust__meta" aria-hidden="true">03 DÉCADAS · EXPERIENCIA ALMAT</span>
+      </div>
     </div>
     <div class="trust__content">
       <p class="eyebrow reveal-up">TRAYECTORIA Y CONFIANZA</p>
-      <h2 class="section-title reveal-title">Tres décadas de oficio y evolución.</h2>
+      <h2 class="section-title reveal-title">Tres décadas de oficio y evolución</h2>
       <p class="body-large reveal-up">Una empresa familiar nacida en Caballito, con experiencia en soluciones de aluminio y vidrio para hogares, comercios y proyectos arquitectónicos.</p>
       <div class="cta-group"><ActionLink href={whatsapp} label="Contactanos hoy" light external /></div>
     </div>
@@ -115,64 +113,58 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="wrap capabilities__head">
       <div class="capabilities__support">
         <p class="eyebrow reveal-up">LO QUE HACEMOS</p>
-        <h2 class="section-title reveal-title">Cinco soluciones. Una misma precisión.</h2>
+        <h2 class="section-title reveal-title">Cinco soluciones. Una misma precisión</h2>
       </div>
     </div>
-    <div class="wrap capabilities-grid">
+    <div class="capabilities-grid">
       <article class="capability-card" data-reveal>
         <div class="capability-card__image"><Image src={heroInterior} alt="Aberturas de aluminio de gran formato" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
         <span>01</span><h3>Fabricación e instalación de aberturas de aluminio</h3>
         <p>Fabricamos aberturas de aluminio a medida para responder con precisión a cada proyecto.</p>
-        <ActionLink href={whatsapp} label="Quiero asesoramiento" external />
+        <ActionLink href={whatsapp} label="Asesoramiento" external />
       </article>
       <article class="capability-card" data-reveal data-reveal-delay="1">
         <div class="capability-card__image"><Image src={patio} alt="Cerramiento de aluminio integrado a un patio" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
         <span>02</span><h3>Cerramientos de aluminio</h3>
         <p>Instalamos cerramientos de aluminio para integrar ambientes y aprovechar mejor cada espacio.</p>
-        <ActionLink href={whatsapp} label="Consultar cerramientos" external />
+        <ActionLink href={whatsapp} label="Cerramientos" external />
       </article>
       <article class="capability-card" data-reveal data-reveal-delay="2">
         <div class="capability-card__image"><Image src={lobby} alt="Vidrio templado aplicado en un interior contemporáneo" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
         <span>03</span><h3>Vidrios, espejos y templados</h3>
         <p>Colocamos espejos de diseño, vidrios de seguridad y templados para cada necesidad.</p>
-        <ActionLink href={whatsapp} label="Hacer una consulta" external />
+        <ActionLink href={whatsapp} label="Consultar" external />
       </article>
       <article class="capability-card" data-reveal data-reveal-delay="3">
         <div class="capability-card__image"><Image src={pergola} alt="Cerramiento vidriado corredizo en una terraza" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 25vw" loading="lazy" /></div>
         <span>04</span><h3>Cerramientos corredizos y plegadizos de vidrio</h3>
         <p>Instalamos sistemas vidriados que conectan y transforman ambientes interiores y exteriores.</p>
-        <ActionLink href={whatsapp} label="Solicitar presupuesto" external />
+        <ActionLink href={whatsapp} label="Presupuesto" external />
       </article>
       <article class="capability-card" data-reveal data-reveal-delay="4">
         <div class="capability-card__image"><Image src={pvcDormitorio} alt="Abertura de PVC blanca en un dormitorio con vista al jardín" widths={[480, 760]} sizes="(max-width: 760px) 100vw, 20vw" loading="lazy" /></div>
         <span>05</span><h3>Aberturas de PVC</h3>
         <p>Fabricamos aberturas de PVC a medida para mejorar el aislamiento térmico y acústico.</p>
-        <ActionLink href={whatsapp} label="Consultar por PVC" external />
+        <ActionLink href={whatsapp} label="PVC" external />
       </article>
     </div>
   </section>
 
-  <section class="services-feature dark-section" data-service-list>
-    <div class="wrap services-head">
-      <p class="eyebrow reveal-up">NUESTRAS SOLUCIONES</p>
-      <h2 class="section-title reveal-title">Soluciones que transforman espacios.</h2>
-      <p class="lead reveal-up">Cada proyecto combina uso, escala y materialidad. Te ayudamos a definir el sistema indicado.</p>
-    </div>
-    <div class="service-explorer">
-      <div class="service-explorer__images">
-        {services.map((service, index) => (
-          <div class:list={["service-explorer__image", { "is-active": index === 0 }]} data-service-image>
-            <Image src={service.image} alt={service.title} widths={[720, 1080, 1440]} sizes="(max-width: 960px) 100vw, 50vw" loading={index === 0 ? 'eager' : 'lazy'} />
-          </div>
-        ))}
+  <section class="benefits dark-section">
+    <div class="wrap benefits__layout">
+      <div class="benefits__top">
+        <div class="section-support">
+          <p class="eyebrow reveal-up">DISEÑO Y PRESTACIONES</p>
+          <h2 class="section-title reveal-title">Belleza que también se siente</h2>
+          <p class="lead reveal-up">Elegir bien perfiles, vidrios y sistemas mejora el uso cotidiano de cada ambiente.</p>
+          <div class="cta-group reveal-up"><ActionLink href={whatsapp} label="Elegir la solución adecuada" light external /></div>
+        </div>
       </div>
-      <div class="service-explorer__list">
-        {services.map((service, index) => (
-          <a href={`${base}/servicios/#servicio-${index + 1}`} class="service-row" data-service-row>
-            <span class="service-row__number">0{index + 1}</span>
-            <h3>{service.title}</h3>
-          </a>
-        ))}
+      <div class="benefit-list">
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">01</span><h3>Climatización e insonorización</h3><p>Según la línea, el vidrio y la instalación, una abertura adecuada puede contribuir al aislamiento térmico y acústico de los ambientes.</p></div>
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Ecología y sustentabilidad</h3><p>El aluminio es un material reciclable que puede reincorporarse a nuevos ciclos productivos conservando sus propiedades.</p></div>
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Durabilidad y economía</h3><p>Su resistencia y bajo mantenimiento favorecen una vida útil prolongada y un buen desempeño cotidiano.</p></div>
+        <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Seguridad</h3><p>Perfiles, herrajes y vidrios se seleccionan de acuerdo con las necesidades de protección y uso de cada proyecto.</p></div>
       </div>
     </div>
   </section>
@@ -181,7 +173,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="wrap work-head section-composition section-composition--split">
       <div class="section-support">
         <p class="eyebrow reveal-up">NUESTROS TRABAJOS</p>
-        <h2 class="section-title reveal-title">La arquitectura se vive en los detalles.</h2>
+        <h2 class="section-title reveal-title">La arquitectura se vive en los detalles</h2>
         <p class="lead reveal-up">Una selección de soluciones realizadas para viviendas, terrazas y fachadas.</p>
         <div class="cta-group reveal-up"><ActionLink href={whatsapp} label="Quiero un proyecto así" external /></div>
       </div>
@@ -204,21 +196,16 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     </dialog>
   </section>
 
-  <section class="benefits dark-section">
-    <div class="wrap benefits__layout">
-      <div class="benefits__top">
-        <div class="section-support">
-          <p class="eyebrow reveal-up">DISEÑO Y PRESTACIONES</p>
-          <h2 class="section-title reveal-title">Belleza que también se siente.</h2>
-          <p class="lead reveal-up">Elegir bien perfiles, vidrios y sistemas mejora el uso cotidiano de cada ambiente.</p>
-          <div class="cta-group reveal-up"><ActionLink href={whatsapp} label="Elegir la solución adecuada" light external /></div>
-        </div>
+  <section class="visual-cta dark-zone">
+    <Image src={heroGolden} alt="Interior contemporáneo abierto hacia la ciudad al atardecer" widths={[720, 1200, 1920]} sizes="100vw" loading="lazy" data-parallax />
+    <div class="wrap visual-cta__content">
+      <div>
+        <p class="eyebrow reveal-up">HABLEMOS</p>
+        <h2 class="section-title reveal-title">Tu próximo espacio comienza acá</h2>
       </div>
-      <div class="benefit-list">
-        <div class="benefit-row" data-reveal><span class="benefit-row__number">01</span><h3>Climatización e insonorización</h3><p>Según la línea, el vidrio y la instalación, una abertura adecuada puede contribuir al aislamiento térmico y acústico de los ambientes.</p></div>
-        <div class="benefit-row" data-reveal><span class="benefit-row__number">02</span><h3>Ecología y sustentabilidad</h3><p>El aluminio es un material reciclable que puede reincorporarse a nuevos ciclos productivos conservando sus propiedades.</p></div>
-        <div class="benefit-row" data-reveal><span class="benefit-row__number">03</span><h3>Durabilidad y economía</h3><p>Su resistencia y bajo mantenimiento favorecen una vida útil prolongada y un buen desempeño cotidiano.</p></div>
-        <div class="benefit-row" data-reveal><span class="benefit-row__number">04</span><h3>Seguridad</h3><p>Perfiles, herrajes y vidrios se seleccionan de acuerdo con las necesidades de protección y uso de cada proyecto.</p></div>
+      <div class="visual-cta__aside reveal-up">
+        <p>Contanos qué necesitás. Te ayudamos a encontrar la solución adecuada para tu proyecto.</p>
+        <div class="cta-group"><ActionLink href={whatsapp} label="Solicitá tu presupuesto" light external /></div>
       </div>
     </div>
   </section>
@@ -227,7 +214,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     <div class="wrap reviews-section__heading">
       <div>
         <p class="eyebrow reveal-up">OPINIONES EN GOOGLE</p>
-        <h2 class="section-title reveal-title" id="reviews-title">La confianza se construye en cada proyecto.</h2>
+        <h2 class="section-title reveal-title" id="reviews-title">La confianza se construye en cada proyecto</h2>
       </div>
       <div class="reviews-section__rating reveal-up" aria-label="Calificación de 4,8 sobre 5 basada en 129 opiniones en Google">
         <strong>4,8</strong>
@@ -250,20 +237,6 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
     </div>
     <div class="wrap reviews-section__footer reveal-up">
       <a href={googleReviews} target="_blank" rel="noopener noreferrer">Ver todas las opiniones en Google <span aria-hidden="true">↗</span></a>
-    </div>
-  </section>
-
-  <section class="visual-cta dark-zone">
-    <Image src={heroGolden} alt="Interior contemporáneo abierto hacia la ciudad al atardecer" widths={[720, 1200, 1920]} sizes="100vw" loading="lazy" data-parallax />
-    <div class="wrap visual-cta__content">
-      <div>
-        <p class="eyebrow reveal-up">HABLEMOS</p>
-        <h2 class="section-title reveal-title">Tu próximo espacio comienza acá.</h2>
-      </div>
-      <div class="visual-cta__aside reveal-up">
-        <p>Contanos qué necesitás. Te ayudamos a encontrar la solución adecuada para tu proyecto.</p>
-        <div class="cta-group"><ActionLink href={whatsapp} label="Solicitá tu presupuesto" light external /></div>
-      </div>
     </div>
   </section>
 </BaseLayout>

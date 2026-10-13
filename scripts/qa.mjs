@@ -38,6 +38,8 @@ for (const [profile, width, height] of profiles) {
     if (heroCtaCount < 1) errors.push(`${profile}/${route || 'home'}: hero has no CTA`);
     const heroContentBottomPadding = await page.locator('.page-hero__content, .home-hero__content').evaluate((content) => parseFloat(getComputedStyle(content).paddingBottom));
     if (heroContentBottomPadding !== 50) errors.push(`${profile}/${route || 'home'}: hero content does not have the requested 50px bottom padding`);
+    const heroContentTopPadding = await page.locator('.page-hero__content, .home-hero__content').evaluate((content) => parseFloat(getComputedStyle(content).paddingTop));
+    if (width > 960 && heroContentTopPadding !== 35) errors.push(`${profile}/${route || 'home'}: desktop hero content does not have 35px above the eyebrow`);
     const heroEyebrows = await page.locator('.page-hero .eyebrow, .home-hero .eyebrow').allTextContents();
     if (heroEyebrows.length !== 1 || heroEyebrows[0].trim() !== 'ABERTURAS Y CERRAMIENTOS') errors.push(`${profile}/${route || 'home'}: hero eyebrow is missing or incorrect`);
     const heroBox = await page.locator('.page-hero, .home-hero').evaluate((hero) => {
@@ -79,6 +81,15 @@ for (const [profile, width, height] of profiles) {
     if (heroBox && heroBox.introLines > 2) errors.push(`${profile}/${route || 'home'}: hero intro uses ${heroBox.introLines} lines`);
     if (heroBox && heroBox.introWidth > heroBox.widestTitleLine + 2) errors.push(`${profile}/${route || 'home'}: hero intro is wider than the title`);
     if (heroBox && (!heroBox.introFontFamily.toLowerCase().includes('roboto') || heroBox.introFontWeight !== '300')) errors.push(`${profile}/${route || 'home'}: hero intro is not Roboto Light`);
+    if (width > 960) {
+      const titleCopyStyles = await page.locator('.page-hero__intro, .home-hero__copy, .section-title + .lead, .section-title + .body-large, .factory-statement__copy > p, .trust__content > .body-large, .method-grid__copy > .body-large, .services-intro > p, .service-scene__copy > p, .visual-cta__aside > p').evaluateAll((items) => items.map((item) => {
+        const style = getComputedStyle(item);
+        return { family: style.fontFamily.toLowerCase(), size: parseFloat(style.fontSize), weight: style.fontWeight };
+      }));
+      if (titleCopyStyles.some(({ family, size, weight }) => !family.includes('roboto') || size !== 16 || weight !== '300')) errors.push(`${profile}/${route || 'home'}: title supporting copy is not 16px Roboto Light on desktop`);
+    }
+    const punctuatedLargeTitles = await page.locator('h1, h2').evaluateAll((titles) => titles.map((title) => title.textContent?.trim() ?? '').filter((title) => title.endsWith('.')));
+    if (punctuatedLargeTitles.length) errors.push(`${profile}/${route || 'home'}: large title still ends in a period: ${punctuatedLargeTitles.join(' | ')}`);
     if (heroBox?.crossesMidpoint) errors.push(`${profile}/${route || 'home'}: hero box crosses the viewport midpoint`);
     const emptyCtas = await page.locator('.cta').evaluateAll((links) => links.filter((link) => !link.textContent?.trim() || (link instanceof HTMLAnchorElement && !link.getAttribute('href'))).length);
     if (emptyCtas) errors.push(`${profile}/${route || 'home'}: ${emptyCtas} CTA(s) missing label or href`);
@@ -145,8 +156,12 @@ for (const [profile, width, height] of profiles) {
     });
     if (!floatingButtonVisible) errors.push(`${profile}/${route || 'home'}: WhatsApp button is not visible after scrolling`);
     if (route === '') {
-      const homeSectionOrder = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 5).map((section) => section.classList[0]));
+      await page.waitForFunction(() => document.querySelector('[data-count-up="30"]')?.textContent === '30');
+      const homeSectionOrder = await page.locator('main > section').evaluateAll((sections) => sections.map((section) => section.classList[0]));
       if (JSON.stringify(homeSectionOrder.slice(0, 4)) !== JSON.stringify(['home-hero', 'factory-statement', 'trust', 'logo-strip'])) errors.push(`${profile}/home: trajectory module and logo strip are not directly below the first module`);
+      const capabilitiesIndex = homeSectionOrder.indexOf('capabilities');
+      if (capabilitiesIndex < 0 || homeSectionOrder[capabilitiesIndex + 1] !== 'benefits') errors.push(`${profile}/home: benefits module is not directly after five solutions`);
+      if (homeSectionOrder.at(-2) !== 'visual-cta' || homeSectionOrder.at(-1) !== 'reviews-section') errors.push(`${profile}/home: closing modules are not visual CTA followed by reviews`);
       const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
       if (whatsappCtas.length < 10) errors.push(`${profile}/home: expected at least 10 WhatsApp CTAs, found ${whatsappCtas.length}`);
       if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
@@ -173,7 +188,7 @@ for (const [profile, width, height] of profiles) {
       if (await factoryServiceCta.count() !== 1) errors.push(`${profile}/home: factory services CTA is missing or has an incorrect URL`);
       if (width <= 640 && await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be hidden on mobile`);
       if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
-      if (await page.locator('.services-feature .cta').count()) errors.push(`${profile}/home: removed services feature CTA is still present`);
+      if (await page.locator('.services-feature').count()) errors.push(`${profile}/home: removed services feature module is still present`);
       const benefitsTheme = await page.locator('.benefits').evaluate((section) => ({
         background: getComputedStyle(section).backgroundColor,
         color: getComputedStyle(section).color,
@@ -201,14 +216,20 @@ for (const [profile, width, height] of profiles) {
       const capabilities = await page.locator('.capabilities').evaluate((section) => ({
         title: section.querySelector('h2')?.textContent?.trim(),
         cards: section.querySelectorAll('.capability-card').length,
+        labels: Array.from(section.querySelectorAll('.capability-card .cta'), (button) => button.textContent?.trim() ?? ''),
+        fullWidth: (() => {
+          const grid = section.querySelector('.capabilities-grid')?.getBoundingClientRect();
+          return Boolean(grid && Math.abs(grid.left) < 1 && Math.abs(grid.right - innerWidth) < 1);
+        })(),
         pvcAlt: section.querySelector('.capability-card:last-child img')?.getAttribute('alt'),
         pvcImageLoaded: (() => {
           const image = section.querySelector('.capability-card:last-child img');
           return image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0;
         })()
       }));
-      if (capabilities.title !== 'Cinco soluciones. Una misma precisión.' || capabilities.cards !== 5 || capabilities.pvcAlt !== 'Abertura de PVC blanca en un dormitorio con vista al jardín' || !capabilities.pvcImageLoaded) errors.push(`${profile}/home: PVC capability card is incomplete`);
-      if (await page.locator('.services-feature .service-row').count() !== 5) errors.push(`${profile}/home: services feature should include five solutions`);
+      if (capabilities.title !== 'Cinco soluciones. Una misma precisión' || capabilities.cards !== 5 || capabilities.pvcAlt !== 'Abertura de PVC blanca en un dormitorio con vista al jardín' || !capabilities.pvcImageLoaded) errors.push(`${profile}/home: PVC capability card is incomplete`);
+      if (!capabilities.fullWidth) errors.push(`${profile}/home: capabilities grid is not full viewport width`);
+      if (capabilities.labels.some((label) => label.split(/\s+/).length > 1)) errors.push(`${profile}/home: a capability CTA contains more than one word`);
       const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
         sources: items.map((item) => item.querySelector('img')?.currentSrc),
         rects: items.map((item) => {
@@ -235,17 +256,12 @@ for (const [profile, width, height] of profiles) {
         rating: section.querySelector('.reviews-section__rating')?.getAttribute('aria-label'),
         link: section.querySelector('.reviews-section__footer a')?.getAttribute('href')
       }));
-      if (reviewsSection.title !== 'La confianza se construye en cada proyecto.' || reviewsSection.reviews.length !== 3) errors.push(`${profile}/home: Google reviews section content is incomplete`);
+      if (reviewsSection.title !== 'La confianza se construye en cada proyecto' || reviewsSection.reviews.length !== 3) errors.push(`${profile}/home: Google reviews section content is incomplete`);
       if (reviewsSection.reviews.some(({ quote, source }) => !quote || source !== 'Opinión de 5 estrellas en Google')) errors.push(`${profile}/home: a Google review is missing its quote or attribution`);
       if (reviewsSection.reviews.some(({ stars, starsLabel }) => stars !== '★★★★★' || starsLabel !== '5 de 5 estrellas')) errors.push(`${profile}/home: a Google review is missing its five-star rating`);
       if (reviewsSection.rating !== 'Calificación de 4,8 sobre 5 basada en 129 opiniones en Google') errors.push(`${profile}/home: Google review rating is incorrect`);
       if (reviewsSection.link !== 'https://share.google/H2V3YCetLLZqCp11D') errors.push(`${profile}/home: Google reviews source link is incorrect`);
       if (width >= 1280) {
-        const servicesTitleLines = await page.locator('.services-head .section-title').evaluate((title) => {
-          const style = getComputedStyle(title);
-          return Math.round(title.getBoundingClientRect().height / parseFloat(style.lineHeight));
-        });
-        if (servicesTitleLines !== 1) errors.push(`${profile}/home: services title should use one desktop line`);
         const capabilityCopy = await page.locator('.capability-card > p').evaluateAll((paragraphs) => paragraphs.map((paragraph) => {
           const style = getComputedStyle(paragraph);
           return {
@@ -261,7 +277,6 @@ for (const [profile, width, height] of profiles) {
       await page.waitForTimeout(1200);
       await page.locator('.factory-statement').screenshot({ path: new URL(`factory-statement-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.capabilities').screenshot({ path: new URL(`capabilities-${profile}.png`, root).pathname.slice(1) });
-      await page.locator('.services-feature').screenshot({ path: new URL(`services-feature-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.benefits').screenshot({ path: new URL(`benefits-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.reviews-section').screenshot({ path: new URL(`reviews-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.trust').screenshot({ path: new URL(`partners-${profile}.png`, root).pathname.slice(1) });

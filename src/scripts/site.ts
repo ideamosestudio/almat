@@ -106,6 +106,41 @@ const initParallax = () => {
   update();
 };
 
+const initCountUps = () => {
+  document.querySelectorAll<HTMLElement>('[data-count-up]').forEach((counter) => {
+    const target = Number(counter.dataset.countUp);
+    const milestone = counter.closest<HTMLElement>('.trust__milestone');
+    if (!Number.isFinite(target) || !milestone) return;
+
+    const complete = () => {
+      counter.textContent = String(target);
+      milestone.classList.add('is-counted');
+    };
+
+    if (prefersReduced) {
+      complete();
+      return;
+    }
+
+    counter.textContent = '0';
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      const startedAt = performance.now();
+      const duration = 1600;
+      const tick = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        counter.textContent = String(Math.round(target * eased));
+        if (progress < 1) requestAnimationFrame(tick);
+        else complete();
+      };
+      requestAnimationFrame(tick);
+    }, { threshold: .45 });
+    observer.observe(milestone);
+  });
+};
+
 const initServiceList = () => {
   document.querySelectorAll<HTMLElement>('[data-service-list]').forEach((list) => {
     const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-service-row]'));
@@ -180,6 +215,7 @@ initHeader();
 initHeroCopyWidths();
 initReveals();
 initParallax();
+initCountUps();
 initServiceList();
 initLightbox();
 initForm();
