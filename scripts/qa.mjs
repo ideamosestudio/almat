@@ -154,6 +154,13 @@ for (const [profile, width, height] of profiles) {
       if (width <= 640 && await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be hidden on mobile`);
       if (width > 640 && !await factoryServiceCta.isVisible()) errors.push(`${profile}/home: secondary factory CTA should be visible outside mobile`);
       if (await page.locator('.services-feature .cta').count()) errors.push(`${profile}/home: removed services feature CTA is still present`);
+      const benefitsTheme = await page.locator('.benefits').evaluate((section) => ({
+        background: getComputedStyle(section).backgroundColor,
+        color: getComputedStyle(section).color,
+        rows: section.querySelectorAll('.benefit-row').length,
+        ctaLight: section.querySelector('.cta')?.classList.contains('cta--light')
+      }));
+      if (benefitsTheme.background !== 'rgb(20, 21, 19)' || benefitsTheme.color !== 'rgb(238, 234, 225)' || benefitsTheme.rows !== 4 || !benefitsTheme.ctaLight) errors.push(`${profile}/home: benefits section is not fully using the dark theme`);
       const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
         sources: items.map((item) => item.querySelector('img')?.currentSrc),
         rects: items.map((item) => {

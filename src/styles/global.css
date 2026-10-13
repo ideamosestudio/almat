@@ -270,6 +270,8 @@ h1, h2, h3, p { margin: 0; }
 .benefit-row__number { font-size: .7rem; letter-spacing: .1em; }
 .benefit-row h3 { font-size: var(--type-h3); font-weight: 400; line-height: 1.08; letter-spacing: -.035em; }
 .benefit-row p { max-width: 32rem; opacity: .7; }
+.benefits.dark-section .benefit-list { border-color: var(--line-dark); }
+.benefits.dark-section .benefit-row { border-color: var(--line-dark); }
 
 /* Google reviews */
 .reviews-section { padding-block: var(--section); border-top: 1px solid var(--line-light); }
