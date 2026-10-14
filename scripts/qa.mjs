@@ -37,7 +37,7 @@ for (const [profile, width, height] of profiles) {
     const heroCtaCount = await page.locator('.page-hero .cta, .home-hero .cta').count();
     if (heroCtaCount < 1) errors.push(`${profile}/${route || 'home'}: hero has no CTA`);
     const heroContentBottomPadding = await page.locator('.page-hero__content, .home-hero__content').evaluate((content) => parseFloat(getComputedStyle(content).paddingBottom));
-    if (heroContentBottomPadding !== 50) errors.push(`${profile}/${route || 'home'}: hero content does not have the requested 50px bottom padding`);
+    if (heroContentBottomPadding !== 75) errors.push(`${profile}/${route || 'home'}: hero content does not have the requested 75px bottom padding`);
     const heroContentTopPadding = await page.locator('.page-hero__content, .home-hero__content').evaluate((content) => parseFloat(getComputedStyle(content).paddingTop));
     if (width > 960 && heroContentTopPadding !== 35) errors.push(`${profile}/${route || 'home'}: desktop hero content does not have 35px above the eyebrow`);
     const heroEyebrows = await page.locator('.page-hero .eyebrow, .home-hero .eyebrow').allTextContents();
@@ -164,7 +164,8 @@ for (const [profile, width, height] of profiles) {
       if (homeSectionOrder.at(-2) !== 'visual-cta' || homeSectionOrder.at(-1) !== 'reviews-section') errors.push(`${profile}/home: closing modules are not visual CTA followed by reviews`);
       const whatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
       if (whatsappCtas.length < 10) errors.push(`${profile}/home: expected at least 10 WhatsApp CTAs, found ${whatsappCtas.length}`);
-      if (whatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a WhatsApp CTA has an incorrect URL`);
+      const standardWhatsappCtas = await page.locator('a.cta[href^="https://wa.me/"]:not(.capability-card .cta)').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+      if (standardWhatsappCtas.some((href) => href !== 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.')) errors.push(`${profile}/home: a standard WhatsApp CTA has an incorrect URL`);
       const logosLoaded = await page.locator('.logo-strip__logos img').evaluateAll((images) => images.length === 6 && images.every((image) => image.complete && image.naturalWidth > 0));
       if (!logosLoaded) errors.push(`${profile}/home: partner logos did not load correctly`);
       const verticalRhythm = await page.evaluate(() => {
@@ -217,6 +218,13 @@ for (const [profile, width, height] of profiles) {
         title: section.querySelector('h2')?.textContent?.trim(),
         cards: section.querySelectorAll('.capability-card').length,
         labels: Array.from(section.querySelectorAll('.capability-card .cta'), (button) => button.textContent?.trim() ?? ''),
+        messages: Array.from(section.querySelectorAll('.capability-card .cta'), (button) => new URL(button.href).searchParams.get('text')),
+        pvcTitleLines: (() => {
+          const title = section.querySelector('.capability-card:last-child h3');
+          if (!(title instanceof HTMLElement)) return 0;
+          const style = getComputedStyle(title);
+          return Math.round(title.getBoundingClientRect().height / parseFloat(style.lineHeight));
+        })(),
         fullWidth: (() => {
           const grid = section.querySelector('.capabilities-grid')?.getBoundingClientRect();
           return Boolean(grid && Math.abs(grid.left) < 1 && Math.abs(grid.right - innerWidth) < 1);
@@ -229,7 +237,16 @@ for (const [profile, width, height] of profiles) {
       }));
       if (capabilities.title !== 'Cinco soluciones. Una misma precisión' || capabilities.cards !== 5 || capabilities.pvcAlt !== 'Abertura de PVC blanca en un dormitorio con vista al jardín' || !capabilities.pvcImageLoaded) errors.push(`${profile}/home: PVC capability card is incomplete`);
       if (!capabilities.fullWidth) errors.push(`${profile}/home: capabilities grid is not full viewport width`);
-      if (capabilities.labels.some((label) => label.split(/\s+/).length > 1)) errors.push(`${profile}/home: a capability CTA contains more than one word`);
+      if (capabilities.labels.some((label) => label !== 'Quiero más info')) errors.push(`${profile}/home: capability CTAs are not consistently labelled`);
+      const expectedInfoMessages = [
+        'Hola ALMAT Cerramientos, quiero más info de fabricación e instalación de aberturas de aluminio.',
+        'Hola ALMAT Cerramientos, quiero más info de cerramientos de aluminio.',
+        'Hola ALMAT Cerramientos, quiero más info de vidrios, espejos y templados.',
+        'Hola ALMAT Cerramientos, quiero más info de cerramientos corredizos y plegadizos de vidrio.',
+        'Hola ALMAT Cerramientos, quiero más info de aberturas de PVC.'
+      ];
+      if (JSON.stringify(capabilities.messages) !== JSON.stringify(expectedInfoMessages)) errors.push(`${profile}/home: a capability WhatsApp message is not personalized correctly`);
+      if (capabilities.pvcTitleLines !== 2) errors.push(`${profile}/home: PVC title does not use exactly two lines`);
       const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
         sources: items.map((item) => item.querySelector('img')?.currentSrc),
         rects: items.map((item) => {

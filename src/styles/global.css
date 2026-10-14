@@ -171,7 +171,7 @@ h1, h2, h3, p { margin: 0; }
 .home-hero__media img { object-fit: cover; object-position: center; animation: heroIn 1.8s var(--ease) both; }
 .home-hero__media::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 18% 55%, rgba(7,8,7,.8), rgba(7,8,7,.38) 37%, transparent 68%), linear-gradient(0deg, rgba(7,8,7,.56), transparent 45%); }
 .home-hero__content { position: relative; z-index: 1; }
-.page-hero__content, .home-hero__content { padding-bottom: 50px; }
+.page-hero__content, .home-hero__content { padding-bottom: 75px; }
 .home-hero__heading, .home-hero__lower { width: min(100%, var(--hero-box-width)); }
 .home-hero__heading { display: flex; flex-direction: column; align-items: flex-start; }
 .home-hero__eyebrow { margin-bottom: var(--space-4); font-size: calc(var(--type-eyebrow) + 1px); }
