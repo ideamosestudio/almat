@@ -449,6 +449,8 @@ h1, h2, h3, p { margin: 0; }
 
 @media (min-width: 961px) {
   .page-hero__content, .home-hero__content { padding-top: 35px; }
+  .page-hero__heading .display-title,
+  .home-hero__title { font-size: clamp(3.4425rem, 5.61vw, 5.355rem); }
   .page-hero__intro,
   .home-hero__copy,
   .factory-statement__copy > p,
