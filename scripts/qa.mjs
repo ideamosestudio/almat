@@ -82,6 +82,21 @@ for (const [profile, width, height] of profiles) {
     if (heroBox && heroBox.introWidth > heroBox.widestTitleLine + 2) errors.push(`${profile}/${route || 'home'}: hero intro is wider than the title`);
     if (heroBox && (!heroBox.introFontFamily.toLowerCase().includes('roboto') || heroBox.introFontWeight !== '300')) errors.push(`${profile}/${route || 'home'}: hero intro is not Roboto Light`);
     if (width > 960) {
+      const headerStyle = await page.locator('.site-header').evaluate((header) => {
+        const style = getComputedStyle(header);
+        return { backdrop: style.backdropFilter, background: style.backgroundColor };
+      });
+      const navWeights = await page.locator('.desktop-nav .nav-link').evaluateAll((links) => links.map((link) => parseInt(getComputedStyle(link).fontWeight, 10)));
+      if (headerStyle.backdrop === 'none' || !headerStyle.background.startsWith('rgba(')) errors.push(`${profile}/${route || 'home'}: desktop navigation is missing its glass background`);
+      if (navWeights.some((weight) => weight < 500)) errors.push(`${profile}/${route || 'home'}: desktop navigation type is too light`);
+      const headerContact = page.locator('.header-contact');
+      await headerContact.hover();
+      await page.waitForTimeout(400);
+      const headerContactHover = await headerContact.evaluate((link) => {
+        const style = getComputedStyle(link);
+        return { background: style.backgroundColor, color: style.color };
+      });
+      if (headerContactHover.background !== 'rgb(20, 21, 19)' || headerContactHover.color !== 'rgb(238, 234, 225)') errors.push(`${profile}/${route || 'home'}: desktop header CTA hover is not black with white type`);
       const titleCopyStyles = await page.locator('.page-hero__intro, .home-hero__copy, .section-title + .lead, .section-title + .body-large, .factory-statement__copy > p, .trust__content > .body-large, .method-grid__copy > .body-large, .services-intro > p, .service-scene__copy > p, .visual-cta__aside > p').evaluateAll((items) => items.map((item) => {
         const style = getComputedStyle(item);
         return { family: style.fontFamily.toLowerCase(), size: parseFloat(style.fontSize), weight: style.fontWeight };
@@ -100,12 +115,34 @@ for (const [profile, width, height] of profiles) {
       return Math.abs(parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)) > .5;
     }).length);
     if (asymmetricCtas) errors.push(`${profile}/${route || 'home'}: ${asymmetricCtas} CTA(s) have asymmetric horizontal padding`);
+    const buttonType = await page.locator('.cta > span, .header-contact > span').evaluateAll((items) => items.filter((item) => item.parentElement?.getClientRects().length).map((item) => {
+      const style = getComputedStyle(item);
+      return { weight: parseInt(getComputedStyle(item.parentElement).fontWeight, 10), offset: new DOMMatrixReadOnly(style.transform).m42 };
+    }));
+    if (buttonType.some(({ weight, offset }) => weight !== 550 || Math.round(offset) !== 2)) errors.push(`${profile}/${route || 'home'}: button labels do not use the lighter weight and 2px baseline adjustment`);
     if (width <= 640) {
       const groupsWithMultipleVisibleCtas = await page.locator('.cta-group').evaluateAll((groups) => groups.filter((group) => Array.from(group.querySelectorAll('.cta')).filter((cta) => getComputedStyle(cta).display !== 'none').length > 1).length);
       if (groupsWithMultipleVisibleCtas) errors.push(`${profile}/${route || 'home'}: a mobile CTA group shows more than its first action`);
       const gutter = await page.locator('.wrap').first().evaluate((wrap) => parseFloat(getComputedStyle(wrap).paddingLeft));
       if (Math.abs(gutter - width * .08) > 1) errors.push(`${profile}/${route || 'home'}: mobile content gutter is not 8%`);
     }
+    const footerContact = await page.locator('.footer-contact').evaluate((section) => ({
+      background: getComputedStyle(section).backgroundColor,
+      borderColor: getComputedStyle(section).borderBottomColor,
+      borderWidth: parseFloat(getComputedStyle(section).borderBottomWidth),
+      followedByFooter: section.nextElementSibling?.classList.contains('site-footer') ?? false,
+      title: section.querySelector('h2')?.textContent?.trim(),
+      formAction: section.querySelector('form')?.getAttribute('action'),
+      fields: section.querySelectorAll('input:not([type="hidden"]):not([name="_honey"]), select, textarea').length
+    }));
+    if (footerContact.background !== 'rgb(20, 21, 19)' || footerContact.borderColor !== 'rgb(238, 234, 225)' || footerContact.borderWidth !== 1) errors.push(`${profile}/${route || 'home'}: footer contact module does not have the black background and white divider`);
+    if (!footerContact.followedByFooter || footerContact.title !== 'Hablemos de tu próximo espacio') errors.push(`${profile}/${route || 'home'}: footer contact module is missing or misplaced`);
+    if (footerContact.formAction !== 'https://formsubmit.co/almatcerramientos@gmail.com' || footerContact.fields !== 5) errors.push(`${profile}/${route || 'home'}: footer contact form is incomplete`);
+    const duplicateIds = await page.locator('[id]').evaluateAll((elements) => {
+      const ids = elements.map((element) => element.id);
+      return ids.filter((id, index) => ids.indexOf(id) !== index);
+    });
+    if (duplicateIds.length) errors.push(`${profile}/${route || 'home'}: duplicate IDs found: ${duplicateIds.join(', ')}`);
     await page.waitForTimeout(900);
     const whatsappButton = await page.locator('.whatsapp-float').evaluate((button) => {
       const image = button.querySelector('img');
@@ -218,6 +255,14 @@ for (const [profile, width, height] of profiles) {
         title: section.querySelector('h2')?.textContent?.trim(),
         cards: section.querySelectorAll('.capability-card').length,
         labels: Array.from(section.querySelectorAll('.capability-card .cta'), (button) => button.textContent?.trim() ?? ''),
+        titleLines: Array.from(section.querySelectorAll('.capability-card h3'), (title) => {
+          const style = getComputedStyle(title);
+          return Math.round(title.getBoundingClientRect().height / parseFloat(style.lineHeight));
+        }),
+        copyLines: Array.from(section.querySelectorAll('.capability-card > p'), (copy) => {
+          const style = getComputedStyle(copy);
+          return Math.round(copy.getBoundingClientRect().height / parseFloat(style.lineHeight));
+        }),
         messages: Array.from(section.querySelectorAll('.capability-card .cta'), (button) => new URL(button.href).searchParams.get('text')),
         pvcTitleLines: (() => {
           const title = section.querySelector('.capability-card:last-child h3');
@@ -246,7 +291,9 @@ for (const [profile, width, height] of profiles) {
         'Hola ALMAT Cerramientos, quiero más info de aberturas de PVC.'
       ];
       if (JSON.stringify(capabilities.messages) !== JSON.stringify(expectedInfoMessages)) errors.push(`${profile}/home: a capability WhatsApp message is not personalized correctly`);
-      if (capabilities.pvcTitleLines !== 2) errors.push(`${profile}/home: PVC title does not use exactly two lines`);
+      if (width > 960 && capabilities.pvcTitleLines !== 2) errors.push(`${profile}/home: PVC title does not use exactly two desktop lines`);
+      if (width > 960 && capabilities.titleLines.some((lines) => lines !== 2)) errors.push(`${profile}/home: every capability title must use exactly two desktop lines`);
+      if (width > 960 && capabilities.copyLines.some((lines) => lines !== 3)) errors.push(`${profile}/home: every capability description must use exactly three desktop lines`);
       const galleryLayout = await page.locator('.masonry-gallery .gallery-item').evaluateAll((items) => ({
         sources: items.map((item) => item.querySelector('img')?.currentSrc),
         rects: items.map((item) => {
@@ -287,9 +334,21 @@ for (const [profile, width, height] of profiles) {
             lines: Math.round(paragraph.getBoundingClientRect().height / parseFloat(style.lineHeight))
           };
         }));
-        if (capabilityCopy.some(({ lines }) => lines > 3)) errors.push(`${profile}/home: a capability description exceeds three lines`);
+        if (capabilityCopy.some(({ lines }) => lines !== 3)) errors.push(`${profile}/home: a capability description does not use exactly three lines`);
         if (Math.max(...capabilityCopy.map(({ characters }) => characters)) - Math.min(...capabilityCopy.map(({ characters }) => characters)) > 10) errors.push(`${profile}/home: capability descriptions are not balanced by character count`);
         if (Math.max(...capabilityCopy.map(({ words }) => words)) - Math.min(...capabilityCopy.map(({ words }) => words)) > 2) errors.push(`${profile}/home: capability descriptions are not balanced by word count`);
+      }
+      if (width > 960) {
+        const alignedSectionStarts = await page.evaluate(() => {
+          const selectors = ['.capabilities__support', '.work-head .section-support', '.reviews-section__heading > div:first-child', '.visual-cta__content > div:first-child'];
+          return selectors.map((selector) => Math.round(document.querySelector(selector)?.getBoundingClientRect().left ?? -1));
+        });
+        if (new Set(alignedSectionStarts).size !== 1) errors.push(`${profile}/home: major section text boxes do not share the same left axis (${alignedSectionStarts.join(', ')})`);
+        const visualCtaTopAir = await page.locator('.visual-cta').evaluate((section) => {
+          const eyebrow = section.querySelector('.eyebrow');
+          return eyebrow ? Math.round(eyebrow.getBoundingClientRect().top - section.getBoundingClientRect().top) : -1;
+        });
+        if (visualCtaTopAir < 83) errors.push(`${profile}/home: visual CTA eyebrow does not have the added 35px top breathing room`);
       }
       await page.waitForTimeout(1200);
       await page.locator('.factory-statement').screenshot({ path: new URL(`factory-statement-${profile}.png`, root).pathname.slice(1) });
@@ -299,6 +358,7 @@ for (const [profile, width, height] of profiles) {
       await page.locator('.trust').screenshot({ path: new URL(`partners-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.logo-strip').screenshot({ path: new URL(`logo-strip-${profile}.png`, root).pathname.slice(1) });
       await page.locator('.visual-cta').screenshot({ path: new URL(`visual-cta-${profile}.png`, root).pathname.slice(1) });
+      await page.locator('.footer-contact').screenshot({ path: new URL(`footer-contact-${profile}.png`, root).pathname.slice(1) });
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.waitForTimeout(250);
     }

@@ -1,0 +1,54 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const thanksUrl = `https://ideamosestudio.github.io${base}/contacto/?enviado=1`;
+---
+
+<section class="footer-contact dark-section" aria-labelledby="footer-contact-title">
+  <div class="wrap footer-contact__layout">
+    <div class="footer-contact__intro">
+      <p class="eyebrow">CONTANOS TU PROYECTO</p>
+      <h2 class="section-title" id="footer-contact-title">Hablemos de tu próximo espacio</h2>
+      <p class="footer-contact__copy">Dejanos tus datos y te asesoramos para encontrar la solución adecuada.</p>
+    </div>
+
+    <form class="contact-form footer-contact__form" action="https://formsubmit.co/almatcerramientos@gmail.com" method="POST" data-contact-form novalidate>
+      <input type="hidden" name="_subject" value="Nueva consulta desde la web de ALMAT" />
+      <input type="hidden" name="_next" value={thanksUrl} />
+      <input type="hidden" name="_template" value="table" />
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="sr-only" />
+      <div class="form-grid">
+        <div class="field">
+          <label for="footer-nombre">Nombre y apellido *</label>
+          <input id="footer-nombre" name="nombre" type="text" autocomplete="name" required minlength="2" />
+        </div>
+        <div class="field">
+          <label for="footer-email">Email *</label>
+          <input id="footer-email" name="email" type="email" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="footer-telefono">Teléfono</label>
+          <input id="footer-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
+        </div>
+        <div class="field">
+          <label for="footer-servicio">Servicio de interés *</label>
+          <select id="footer-servicio" name="servicio" required>
+            <option value="" selected disabled>Seleccioná una opción</option>
+            <option>Aberturas de aluminio</option>
+            <option>Cerramientos de aluminio</option>
+            <option>Vidrios, espejos y templados</option>
+            <option>Cerramientos corredizos y plegadizos</option>
+            <option>Aberturas de PVC</option>
+            <option>Otro / necesito asesoramiento</option>
+          </select>
+        </div>
+        <div class="field field--full">
+          <label for="footer-mensaje">Contanos sobre tu proyecto *</label>
+          <textarea id="footer-mensaje" name="mensaje" required minlength="10"></textarea>
+        </div>
+      </div>
+      <button class="form-submit cta cta--primary cta--light" type="submit"><span>Enviar consulta</span></button>
+      <p class="form-note">Los datos se utilizan únicamente para responder tu consulta.</p>
+      <p class="form-status" data-form-status aria-live="polite"></p>
+    </form>
+  </div>
+</section>

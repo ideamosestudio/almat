@@ -4,6 +4,7 @@ import '@fontsource/dm-sans/400.css';
 import '@fontsource/dm-sans/500.css';
 import '@fontsource/roboto/300.css';
 import Header from '../components/Header.astro';
+import FooterContactForm from '../components/FooterContactForm.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import '../styles/global.css';
@@ -40,6 +41,7 @@ const socialImage = image ?? `${base}/brand/almat-logo-black.png`;
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <Header />
     <main id="contenido"><slot /></main>
+    <FooterContactForm />
     <Footer />
     <WhatsAppButton />
     <script>

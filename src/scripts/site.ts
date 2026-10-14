@@ -190,24 +190,24 @@ const initLightbox = () => {
 };
 
 const initForm = () => {
-  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
-  if (!form) return;
-  const status = form.querySelector<HTMLElement>('[data-form-status]')!;
-  if (new URLSearchParams(window.location.search).get('enviado') === '1') {
-    status.textContent = 'Gracias. Tu consulta fue enviada correctamente.';
-    status.dataset.state = 'success';
-  }
-  form.addEventListener('submit', (event) => {
-    if (!form.checkValidity()) {
-      event.preventDefault();
-      form.classList.add('was-validated');
-      status.textContent = 'Revisá los campos marcados antes de enviar.';
-      status.dataset.state = 'error';
-      form.querySelector<HTMLElement>(':invalid')?.focus();
-      return;
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-form-status]')!;
+    if (new URLSearchParams(window.location.search).get('enviado') === '1') {
+      status.textContent = 'Gracias. Tu consulta fue enviada correctamente.';
+      status.dataset.state = 'success';
     }
-    status.textContent = 'Enviando consulta…';
-    status.dataset.state = 'sending';
+    form.addEventListener('submit', (event) => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        form.classList.add('was-validated');
+        status.textContent = 'Revisá los campos marcados antes de enviar.';
+        status.dataset.state = 'error';
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      status.textContent = 'Enviando consulta…';
+      status.dataset.state = 'sending';
+    });
   });
 };
 
