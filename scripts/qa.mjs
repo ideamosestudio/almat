@@ -115,11 +115,12 @@ for (const [profile, width, height] of profiles) {
       return Math.abs(parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)) > .5;
     }).length);
     if (asymmetricCtas) errors.push(`${profile}/${route || 'home'}: ${asymmetricCtas} CTA(s) have asymmetric horizontal padding`);
-    const buttonType = await page.locator('.cta > span, .header-contact > span').evaluateAll((items) => items.filter((item) => item.parentElement?.getClientRects().length).map((item) => {
+    const buttonType = await page.locator('.cta, .header-contact').evaluateAll((items) => items.filter((item) => item.getClientRects().length).map((item) => {
       const style = getComputedStyle(item);
-      return { weight: parseInt(getComputedStyle(item.parentElement).fontWeight, 10), offset: new DOMMatrixReadOnly(style.transform).m42 };
+      const label = item.querySelector('span') ?? item;
+      return { weight: parseInt(style.fontWeight, 10), size: parseFloat(style.fontSize), transform: getComputedStyle(label).transform };
     }));
-    if (buttonType.some(({ weight, offset }) => weight !== 550 || Math.round(offset) !== 2)) errors.push(`${profile}/${route || 'home'}: button labels do not use the lighter weight and 2px baseline adjustment`);
+    if (buttonType.some(({ weight, size, transform }) => weight !== 550 || Math.abs(size - 9.52) > .05 || transform !== 'none')) errors.push(`${profile}/${route || 'home'}: button labels do not use the requested 2px smaller type without vertical displacement`);
     if (width <= 640) {
       const groupsWithMultipleVisibleCtas = await page.locator('.cta-group').evaluateAll((groups) => groups.filter((group) => Array.from(group.querySelectorAll('.cta')).filter((cta) => getComputedStyle(cta).display !== 'none').length > 1).length);
       if (groupsWithMultipleVisibleCtas) errors.push(`${profile}/${route || 'home'}: a mobile CTA group shows more than its first action`);
