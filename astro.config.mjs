@@ -1,9 +1,11 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+const customDomain = process.env.ALMAT_CUSTOM_DOMAIN === 'true';
+
 export default defineConfig({
-  site: 'https://ideamosestudio.github.io',
-  base: '/almat',
+  site: customDomain ? 'https://almatcerramientos.com.ar' : 'https://ideamosestudio.github.io',
+  base: customDomain ? '/' : '/almat',
   output: 'static',
   trailingSlash: 'always',
   integrations: [sitemap()],
