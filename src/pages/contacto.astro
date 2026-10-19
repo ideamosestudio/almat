@@ -4,7 +4,7 @@ import PageHero from '../components/PageHero.astro';
 import heroGolden from '../assets/heroes/hero-golden.jpg';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const thanksUrl = `https://ideamosestudio.github.io${base}/contacto/?enviado=1`;
+const thanksUrl = new URL(`${base}/contacto/?enviado=1`, Astro.site).href;
 const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 ---
 <BaseLayout title="Contacto | ALMAT Cerramientos" description="Solicitá un presupuesto para aberturas y cerramientos. Showroom en Av. Raúl Scalabrini Ortiz 1022, CABA.">

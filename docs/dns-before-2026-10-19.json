@@ -1,0 +1,139 @@
+[
+  {
+    "Name": "almatcerramientos.com.ar",
+    "Type": 1,
+    "TTL": 3338,
+    "IPAddress": "167.250.5.104",
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "almatcerramientos.com.ar",
+    "Type": 15,
+    "TTL": 3338,
+    "IPAddress": null,
+    "NameHost": null,
+    "NameExchange": "almatcerramientos.com.ar",
+    "Preference": 0,
+    "Strings": null
+  },
+  {
+    "Name": "almatcerramientos.com.ar",
+    "Type": 1,
+    "TTL": 3338,
+    "IPAddress": "167.250.5.104",
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "almatcerramientos.com.ar",
+    "Type": 16,
+    "TTL": 3338,
+    "IPAddress": null,
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": [
+      "v=spf1 ip4:167.250.5.104 include:servidoraweb.net +a +mx +ip4:167.250.5.28 ~all"
+    ]
+  },
+  {
+    "Name": "almatcerramientos.com.ar",
+    "Type": 2,
+    "TTL": 3338,
+    "IPAddress": null,
+    "NameHost": "dns2.servidoraweb.net",
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "almatcerramientos.com.ar",
+    "Type": 2,
+    "TTL": 3338,
+    "IPAddress": null,
+    "NameHost": "dns1.servidoraweb.net",
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "dns1.servidoraweb.net",
+    "Type": 1,
+    "TTL": 3447,
+    "IPAddress": "167.250.4.4",
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "dns2.servidoraweb.net",
+    "Type": 1,
+    "TTL": 2349,
+    "IPAddress": "158.69.231.253",
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "mail.almatcerramientos.com.ar",
+    "Type": 5,
+    "TTL": 3349,
+    "IPAddress": null,
+    "NameHost": "almatcerramientos.com.ar",
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "www.almatcerramientos.com.ar",
+    "Type": 5,
+    "TTL": 3337,
+    "IPAddress": null,
+    "NameHost": "almatcerramientos.com.ar",
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "webmail.almatcerramientos.com.ar",
+    "Type": 1,
+    "TTL": 3409,
+    "IPAddress": "167.250.5.104",
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": null
+  },
+  {
+    "Name": "_dmarc.almatcerramientos.com.ar",
+    "Type": 16,
+    "TTL": 3349,
+    "IPAddress": null,
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": [
+      "v=DMARC1; p=none;"
+    ]
+  },
+  {
+    "Name": "default._domainkey.almatcerramientos.com.ar",
+    "Type": 16,
+    "TTL": 3349,
+    "IPAddress": null,
+    "NameHost": null,
+    "NameExchange": null,
+    "Preference": null,
+    "Strings": [
+      "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsIuQM4upYVToawDVSfZISP1WTIBKsqE2j5DfOiH3fofGPlS+DSkv9JsenQfMK6/wQXE6d+LrhVQVCjxog7hm2nf75y6Z8nq8ki8N7JdzaHyCiY+ObZlgrGswQCeKwPbVfWmjbnA6RroMWcsa75OyFqYBV/PEtYqjy+MD7GR+lMpxSZBbTBHa+8l+ByvMDKbV8",
+      "uCvzrTY67dAEWcGcH7icN7wOkOTmNBYzi1RvE1v3jI1/iusucHQ/z8MavOq12j+PexPMSkHgaS6w6PVJtrJ40EgRorioTJ9LlL2C11nqxHHls+RpdgaA7nBvAHS+09tW8M9My2qF2b1khr+gXjHuwIDAQAB;"
+    ]
+  }
+]

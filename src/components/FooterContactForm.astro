@@ -1,6 +1,6 @@
 ---
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const thanksUrl = `https://ideamosestudio.github.io${base}/contacto/?enviado=1`;
+const thanksUrl = new URL(`${base}/contacto/?enviado=1`, Astro.site).href;
 ---
 
 <section class="footer-contact dark-section" aria-labelledby="footer-contact-title">
