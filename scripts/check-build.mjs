@@ -7,7 +7,8 @@ const routes = ['', 'nosotros/', 'servicios/', 'contacto/'];
 for (const route of routes) {
   const html = readFileSync(`dist/${route}index.html`, 'utf8');
   assert.ok(html.includes(`rel="canonical" href="${origin}${base}/${route}"`), `canonical: ${route}`);
-  assert.ok(html.includes(`${origin}${base}/contacto/?enviado=1`), `form return: ${route}`);
+  assert.ok(html.includes('action="https://mail.almatcerramientos.com.ar/almat-api/contact.php"'), `own mail endpoint: ${route}`);
+  assert.ok(!html.includes('formsubmit.co'), `third-party form endpoint: ${route}`);
   if (custom) assert.ok(!html.includes('ideamosestudio.github.io'), `old domain: ${route}`);
   for (const match of html.matchAll(/(?:href|src)="(\/[^"?#]*)(?:[?#][^"]*)?"/g)) {
     const url = match[1];

@@ -192,11 +192,10 @@ const initLightbox = () => {
 const initForm = () => {
   document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
     const status = form.querySelector<HTMLElement>('[data-form-status]')!;
-    if (new URLSearchParams(window.location.search).get('enviado') === '1') {
-      status.textContent = 'Gracias. Tu consulta fue enviada correctamente.';
-      status.dataset.state = 'success';
-    }
-    form.addEventListener('submit', (event) => {
+    let sending = false;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (sending) return;
       if (!form.checkValidity()) {
         event.preventDefault();
         form.classList.add('was-validated');
@@ -207,6 +206,31 @@ const initForm = () => {
       }
       status.textContent = 'Enviando consulta…';
       status.dataset.state = 'sending';
+      sending = true;
+      const button = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+      button.disabled = true;
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          credentials: 'omit',
+          signal: AbortSignal.timeout(30000),
+        });
+        const result = await response.json();
+        if (!response.ok || result.ok !== true) throw new Error(result.message || 'No pudimos enviar tu consulta.');
+        status.textContent = result.message;
+        status.dataset.state = 'success';
+        form.reset();
+        form.classList.remove('was-validated');
+      } catch (error) {
+        status.textContent = error instanceof Error && error.name === 'Error'
+          ? error.message
+          : 'No pudimos confirmar el envío. Intentá más tarde o escribinos por WhatsApp.';
+        status.dataset.state = 'error';
+      } finally {
+        sending = false;
+        button.disabled = false;
+      }
     });
   });
 };
