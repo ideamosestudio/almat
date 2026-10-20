@@ -3,8 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import heroGolden from '../assets/heroes/hero-golden.jpg';
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const thanksUrl = new URL(`${base}/contacto/?enviado=1`, Astro.site).href;
 const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 ---
 <BaseLayout title="Contacto | ALMAT Cerramientos" description="Solicitá un presupuesto para aberturas y cerramientos. Showroom en Av. Raúl Scalabrini Ortiz 1022, CABA.">
@@ -32,10 +30,7 @@ const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20
         </div>
       </div>
 
-      <form class="contact-form" action="https://formsubmit.co/almatcerramientos@gmail.com" method="POST" data-contact-form novalidate>
-        <input type="hidden" name="_subject" value="Nueva consulta desde la web de ALMAT" />
-        <input type="hidden" name="_next" value={thanksUrl} />
-        <input type="hidden" name="_template" value="table" />
+      <form class="contact-form" action="https://mail.almatcerramientos.com.ar/almat-api/contact.php" method="POST" data-contact-form novalidate>
         <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="sr-only" />
         <div class="form-grid">
           <div class="field">

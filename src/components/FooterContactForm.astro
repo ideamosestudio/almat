@@ -1,6 +1,4 @@
 ---
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const thanksUrl = new URL(`${base}/contacto/?enviado=1`, Astro.site).href;
 ---
 
 <section class="footer-contact dark-section" aria-labelledby="footer-contact-title">
@@ -11,10 +9,7 @@ const thanksUrl = new URL(`${base}/contacto/?enviado=1`, Astro.site).href;
       <p class="footer-contact__copy">Dejanos tus datos y te asesoramos para encontrar la solución adecuada.</p>
     </div>
 
-    <form class="contact-form footer-contact__form" action="https://formsubmit.co/almatcerramientos@gmail.com" method="POST" data-contact-form novalidate>
-      <input type="hidden" name="_subject" value="Nueva consulta desde la web de ALMAT" />
-      <input type="hidden" name="_next" value={thanksUrl} />
-      <input type="hidden" name="_template" value="table" />
+    <form class="contact-form footer-contact__form" action="https://mail.almatcerramientos.com.ar/almat-api/contact.php" method="POST" data-contact-form novalidate>
       <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="sr-only" />
       <div class="form-grid">
         <div class="field">
