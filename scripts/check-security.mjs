@@ -19,7 +19,10 @@ for (const page of pages) {
   assert.ok(!/(?:src|href|action)="http:\/\//i.test(html), `insecure resource: ${page}`);
   assert.equal((html.match(/data-contact-form/g) || []).length, 1, `duplicate forms: ${page}`);
   assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, `H1 count: ${page}`);
-  assert.ok(!/\ssrc="https:\/\/www\.google\.com/.test(html), `map loaded before interaction: ${page}`);
+  if (page === 'contacto/index.html') {
+    assert.ok(/<iframe[^>]+\ssrc="https:\/\/www\.google\.com\/maps/.test(html), 'contact map missing');
+    assert.ok(!html.includes('data-load-map'), 'map must not require a click');
+  }
   assert.ok(html.includes('rel="canonical"') && html.includes('name="description"'), `SEO metadata: ${page}`);
 }
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
@@ -46,4 +49,4 @@ assert.ok(!assets.some((name) => name.endsWith('.map')), 'source maps exposed');
 for (const brand of ['almat-logo-black.webp', 'almat-logo-white.webp', 'whatsapp-almat.webp']) {
   assert.ok(statSync(`dist/brand/${brand}`).size < 25000, `brand budget: ${brand}`);
 }
-console.log(`PASS: CSP, one form/page, SEO, deferred map, tracked-secret patterns and asset budgets. JS=${bytes('.js')}B CSS=${bytes('.css')}B`);
+console.log(`PASS: CSP, one form/page, SEO, embedded map, tracked-secret patterns and asset budgets. JS=${bytes('.js')}B CSS=${bytes('.css')}B`);

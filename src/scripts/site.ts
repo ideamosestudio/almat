@@ -266,19 +266,6 @@ const initForm = () => {
   });
 };
 
-const initMap = () => {
-  const map = document.querySelector<HTMLElement>('[data-map]');
-  const button = map?.querySelector<HTMLButtonElement>('[data-load-map]');
-  const iframe = map?.querySelector<HTMLIFrameElement>('iframe[data-map-src]');
-  if (!map || !button || !iframe) return;
-  button.addEventListener('click', () => {
-    iframe.src = iframe.dataset.mapSrc!;
-    iframe.hidden = false;
-    map.querySelector<HTMLElement>('[data-map-placeholder]')!.hidden = true;
-    iframe.focus();
-  }, { once: true });
-};
-
 initHeader();
 initHeroCopyWidths();
 initReveals();
@@ -286,4 +273,3 @@ initParallax();
 initCountUps();
 initLightbox();
 initForm();
-initMap();

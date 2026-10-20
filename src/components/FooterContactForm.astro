@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from "./ArrowIcon.astro";
 interface Props { id?: string; }
 const { id = 'consulta' } = Astro.props;
 ---
@@ -12,16 +13,16 @@ const { id = 'consulta' } = Astro.props;
       <div class="contact-channels">
         <a href="https://wa.me/5491127332222" target="_blank" rel="noreferrer">
           <span class="contact-channels__label">01 / Hablemos</span>
-          <span class="contact-channels__value">WhatsApp <span aria-hidden="true">↗</span></span>
+          <span class="contact-channels__value">WhatsApp <span aria-hidden="true"><ArrowIcon /></span></span>
           <span class="contact-channels__detail">11 2733-2222</span>
         </a>
         <a href="mailto:almatcerramientos@gmail.com">
           <span class="contact-channels__label">02 / Escribinos</span>
-          <span class="contact-channels__value contact-channels__email">almatcerramientos@gmail.com <span aria-hidden="true">↗</span></span>
+          <span class="contact-channels__value contact-channels__email">almatcerramientos@gmail.com <span aria-hidden="true"><ArrowIcon /></span></span>
         </a>
         <a href="https://maps.google.com/?q=Av.+Ra%C3%BAl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer">
           <span class="contact-channels__label">03 / Nuestro showroom</span>
-          <span class="contact-channels__value">Scalabrini Ortiz 1022 <span aria-hidden="true">↗</span></span>
+          <span class="contact-channels__value">Scalabrini Ortiz 1022 <span aria-hidden="true"><ArrowIcon /></span></span>
           <span class="contact-channels__detail">CABA · Lunes a viernes de 9 a 17 h</span>
         </a>
       </div>
@@ -64,7 +65,7 @@ const { id = 'consulta' } = Astro.props;
           <textarea id="footer-mensaje" name="mensaje" required minlength="10" maxlength="3000"></textarea>
         </div>
       </div>
-      <button class="form-submit cta cta--primary cta--light" type="submit"><span>Enviar consulta</span><span aria-hidden="true">↗</span></button>
+      <button class="form-submit cta cta--primary cta--light" type="submit"><span>Enviar consulta</span><span aria-hidden="true"><ArrowIcon /></span></button>
       <p class="form-note">Los datos se utilizan únicamente para responder tu consulta.</p>
       <p class="form-status" data-form-status aria-live="polite"></p>
       <noscript><p class="form-note">Para usar el formulario, activá JavaScript. También podés escribirnos por WhatsApp o email desde los enlaces de esta sección.</p></noscript>

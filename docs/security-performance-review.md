@@ -1,5 +1,12 @@
 # Revisión de seguridad, rendimiento y diseño — 20/10/2026
 
+Actualización posterior de interfaz: a pedido del cliente, el mapa de Contacto
+vuelve a mostrarse automáticamente, con iframe visible y carga eager, sin botón
+intermedio. Se retiró el código de activación manual. Las flechas de texto del
+sitio se sustituyeron por SVG inline con trazos, sin fuentes de íconos ni nuevas
+dependencias. La medición PageSpeed citada abajo corresponde a la portada; no
+representa una medición de Contacto con su mapa.
+
 ## Alcance real
 
 Frontend estático Astro en GitHub Pages y un endpoint PHP en cPanel para enviar
