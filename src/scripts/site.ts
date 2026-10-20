@@ -23,10 +23,24 @@ const initHeader = () => {
   toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
   document.addEventListener('keydown', (event) => {
+    if (event.key === 'Tab' && toggle.getAttribute('aria-expanded') === 'true') {
+      const focusable = [toggle, ...menu.querySelectorAll<HTMLAnchorElement>('a[href]')];
+      const current = focusable.indexOf(document.activeElement as HTMLButtonElement);
+      if (event.shiftKey && current <= 0) {
+        event.preventDefault();
+        focusable.at(-1)?.focus();
+      } else if (!event.shiftKey && (current === -1 || current === focusable.length - 1)) {
+        event.preventDefault();
+        toggle.focus();
+      }
+    }
     if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
       setMenu(false);
       toggle.focus();
     }
+  });
+  window.matchMedia('(min-width: 961px)').addEventListener('change', (event) => {
+    if (event.matches) setMenu(false);
   });
 };
 
@@ -35,19 +49,25 @@ const initHeroCopyWidths = () => {
   if (!heroes.length) return;
 
   const sync = () => {
-    heroes.forEach((hero) => {
+    const measurements = heroes.map((hero) => {
       const title = hero.querySelector<HTMLElement>('[data-hero-title]');
       const intro = hero.querySelector<HTMLElement>('[data-hero-intro]');
-      if (!title || !intro) return;
+      if (!title || !intro) return null;
       const range = document.createRange();
       range.selectNodeContents(title);
       const widestTitleLine = Math.max(...Array.from(range.getClientRects(), (rect) => rect.width));
-      intro.style.setProperty('--hero-title-line-width', `${Math.ceil(widestTitleLine)}px`);
+      return { intro, width: Math.ceil(widestTitleLine) };
     });
+    measurements.forEach((item) => item?.intro.style.setProperty('--hero-title-line-width', `${item.width}px`));
   };
 
   document.fonts.ready.then(sync);
-  window.addEventListener('resize', sync, { passive: true });
+  let pending = false;
+  window.addEventListener('resize', () => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => { sync(); pending = false; });
+  }, { passive: true });
 };
 
 const initReveals = () => {
@@ -58,6 +78,15 @@ const initReveals = () => {
     titles.forEach((title) => title.classList.add('is-visible'));
     return;
   }
+  // Visible-by-default HTML: no JS failure can hide the page. Preserve reveals
+  // below the fold without delaying the hero's first meaningful paint.
+  [...targets, ...titles].forEach((element) => {
+    if (element.getBoundingClientRect().top < window.innerHeight) {
+      element.classList.add('is-visible');
+    } else {
+      element.classList.add('will-reveal');
+    }
+  });
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
@@ -86,15 +115,23 @@ const initParallax = () => {
   if (prefersReduced) return;
   const images = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'));
   if (!images.length) return;
+  const visible = new Set<HTMLElement>();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) visible.add(entry.target as HTMLElement);
+      else visible.delete(entry.target as HTMLElement);
+    });
+  }, { rootMargin: '100px' });
+  images.forEach((image) => observer.observe(image));
   let ticking = false;
   const update = () => {
     const vh = window.innerHeight;
-    images.forEach((image) => {
+    const positions = [...visible].map((image) => {
       const rect = image.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > vh) return;
       const progress = (rect.top + rect.height / 2 - vh / 2) / vh;
-      image.style.setProperty('--parallax-y', `${progress * -22}px`);
+      return { image, offset: progress * -22 };
     });
+    positions.forEach(({ image, offset }) => image.style.setProperty('--parallax-y', `${offset}px`));
     ticking = false;
   };
   window.addEventListener('scroll', () => {
@@ -138,22 +175,6 @@ const initCountUps = () => {
       requestAnimationFrame(tick);
     }, { threshold: .45 });
     observer.observe(milestone);
-  });
-};
-
-const initServiceList = () => {
-  document.querySelectorAll<HTMLElement>('[data-service-list]').forEach((list) => {
-    const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-service-row]'));
-    const images = Array.from(list.querySelectorAll<HTMLElement>('[data-service-image]'));
-    const activate = (index: number) => {
-      rows.forEach((row, i) => row.classList.toggle('is-active', i === index));
-      images.forEach((image, i) => image.classList.toggle('is-active', i === index));
-    };
-    rows.forEach((row, index) => {
-      row.addEventListener('mouseenter', () => activate(index));
-      row.addEventListener('focusin', () => activate(index));
-    });
-    activate(0);
   });
 };
 
@@ -207,6 +228,7 @@ const initForm = () => {
       status.textContent = 'Enviando consulta…';
       status.dataset.state = 'sending';
       sending = true;
+      form.setAttribute('aria-busy', 'true');
       const button = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
       button.disabled = true;
       try {
@@ -216,9 +238,17 @@ const initForm = () => {
           credentials: 'omit',
           signal: AbortSignal.timeout(30000),
         });
+        if (!response.headers.get('content-type')?.includes('application/json')) throw new TypeError('Unexpected response');
         const result = await response.json();
-        if (!response.ok || result.ok !== true) throw new Error(result.message || 'No pudimos enviar tu consulta.');
-        status.textContent = result.message;
+        if (!response.ok || result?.ok !== true) {
+          const message = response.status === 429
+            ? 'Recibimos varias consultas. Intentá más tarde o escribinos por WhatsApp.'
+            : response.status === 422
+              ? 'Revisá los datos ingresados antes de enviar.'
+              : 'No pudimos enviar tu consulta. Intentá más tarde o escribinos por WhatsApp.';
+          throw new Error(message);
+        }
+        status.textContent = 'Gracias. Tu consulta fue enviada correctamente.';
         status.dataset.state = 'success';
         form.reset();
         form.classList.remove('was-validated');
@@ -229,10 +259,24 @@ const initForm = () => {
         status.dataset.state = 'error';
       } finally {
         sending = false;
+        form.removeAttribute('aria-busy');
         button.disabled = false;
       }
     });
   });
+};
+
+const initMap = () => {
+  const map = document.querySelector<HTMLElement>('[data-map]');
+  const button = map?.querySelector<HTMLButtonElement>('[data-load-map]');
+  const iframe = map?.querySelector<HTMLIFrameElement>('iframe[data-map-src]');
+  if (!map || !button || !iframe) return;
+  button.addEventListener('click', () => {
+    iframe.src = iframe.dataset.mapSrc!;
+    iframe.hidden = false;
+    map.querySelector<HTMLElement>('[data-map-placeholder]')!.hidden = true;
+    iframe.focus();
+  }, { once: true });
 };
 
 initHeader();
@@ -240,6 +284,6 @@ initHeroCopyWidths();
 initReveals();
 initParallax();
 initCountUps();
-initServiceList();
 initLightbox();
 initForm();
+initMap();

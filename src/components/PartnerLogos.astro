@@ -2,11 +2,11 @@
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const partners = [
-  { name: 'Aluar', file: 'aluar.webp' },
-  { name: 'Metales del Talar', file: 'mdt.webp' },
-  { name: 'Tanit', file: 'tanit.webp' },
-  { name: 'Giesse', file: 'giesse.webp' },
-  { name: 'Red Ekoglass', file: 'red-ekoglass.webp' }
+  { name: 'Aluar', file: 'aluar.webp', width: 154, height: 150 },
+  { name: 'Metales del Talar', file: 'mdt.webp', width: 132, height: 150 },
+  { name: 'Tanit', file: 'tanit.webp', width: 330, height: 86 },
+  { name: 'Giesse', file: 'giesse.webp', width: 297, height: 51 },
+  { name: 'Red Ekoglass', file: 'red-ekoglass.webp', width: 196, height: 73 }
 ];
 ---
 
@@ -16,6 +16,8 @@ const partners = [
       <img
         src={`${base}/partners/${partner.file}`}
         alt={partner.name}
+        width={partner.width}
+        height={partner.height}
         loading="lazy"
         decoding="async"
       />

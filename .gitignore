@@ -4,3 +4,10 @@ dist/
 .DS_Store
 *.log
 .qa/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
