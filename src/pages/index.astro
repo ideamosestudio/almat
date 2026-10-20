@@ -42,7 +42,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
 <BaseLayout title="ALMAT Cerramientos | Aberturas y cerramientos en Buenos Aires" description="Fabricación e instalación de aberturas, cerramientos de aluminio y vidrio. Tres décadas transformando espacios en Buenos Aires.">
   <section class="home-hero dark-zone">
     <div class="home-hero__media">
-      <Image src={heroMain} alt="Living contemporáneo conectado a un balcón mediante amplios cerramientos de aluminio" widths={[720, 1200, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+      <Image src={heroMain} alt="Living contemporáneo conectado a un balcón mediante amplios cerramientos de aluminio" widths={[480, 800, 1200, 1920]} sizes="100vw" quality={72} loading="eager" fetchpriority="high" />
     </div>
     <div class="home-hero__content wrap">
       <div class="home-hero__heading">
@@ -74,7 +74,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
         </div>
       </div>
       <div class="factory-statement__image" data-reveal>
-        <Image src={departamentosJardines} alt="Edificio residencial contemporáneo rodeado de jardines" widths={[620, 960, 1300]} sizes="(max-width: 760px) 100vw, 55vw" loading="lazy" data-parallax />
+        <Image src={departamentosJardines} alt="Edificio residencial contemporáneo rodeado de jardines" widths={[480, 720, 960, 1199]} sizes="(max-width: 760px) 100vw, 55vw" quality={72} loading="lazy" data-parallax />
       </div>
     </div>
   </section>
@@ -82,7 +82,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
   <section class="trust dark-section">
     <div class="trust__visual">
       <Image src={heroPool} alt="Cerramientos vidriados de gran formato en una vivienda contemporánea" widths={[720, 1080, 1440]} sizes="(max-width: 960px) 100vw, 43vw" loading="lazy" />
-      <div class="trust__milestone" aria-label="30 años de trayectoria">
+      <div class="trust__milestone" role="group" aria-label="30 años de trayectoria">
         <span class="trust__number" data-count-up="30" aria-hidden="true">30</span>
         <span class="trust__unit" aria-hidden="true">AÑOS</span>
         <span class="trust__progress" aria-hidden="true"></span>
@@ -100,12 +100,12 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
   <section class="logo-strip dark-section" aria-label="Marcas con las que trabajamos">
     <div class="wrap logo-strip__inner">
       <div class="logo-strip__logos">
-        <img src={`${base}/partners/blindex.webp`} alt="Blindex" />
-        <img src={`${base}/partners/vasa.webp`} alt="VASA Vidriería Argentina" />
-        <img src={`${base}/partners/aluar.webp`} alt="Aluar" />
-        <img src={`${base}/partners/casasegat.webp`} alt="Casa Segat" />
-        <img src={`${base}/partners/mdt.webp`} alt="MDT Tecnología en Aluminio y Vidrio" />
-        <img src={`${base}/partners/vilo.webp`} alt="Vilo" />
+        <img src={`${base}/partners/blindex.webp`} alt="Blindex" width="150" height="150" loading="lazy" decoding="async" />
+        <img src={`${base}/partners/vasa.webp`} alt="VASA Vidriería Argentina" width="211" height="150" loading="lazy" decoding="async" />
+        <img src={`${base}/partners/aluar.webp`} alt="Aluar" width="154" height="150" loading="lazy" decoding="async" />
+        <img src={`${base}/partners/casasegat.webp`} alt="Casa Segat" width="480" height="144" loading="lazy" decoding="async" />
+        <img src={`${base}/partners/mdt.webp`} alt="MDT Tecnología en Aluminio y Vidrio" width="132" height="150" loading="lazy" decoding="async" />
+        <img src={`${base}/partners/vilo.webp`} alt="Vilo" width="151" height="150" loading="lazy" decoding="async" />
       </div>
     </div>
   </section>

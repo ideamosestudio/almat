@@ -33,19 +33,19 @@ const { id = 'consulta' } = Astro.props;
         <h3>Contanos tu idea.</h3>
         <p>Nosotros te ayudamos a darle forma.</p>
       </div>
-      <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="sr-only" />
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" aria-label="Dejar vacío" maxlength="300" />
       <div class="form-grid">
         <div class="field">
           <label for="footer-nombre">Nombre y apellido *</label>
-          <input id="footer-nombre" name="nombre" type="text" autocomplete="name" required minlength="2" />
+          <input id="footer-nombre" name="nombre" type="text" autocomplete="name" required minlength="2" maxlength="100" />
         </div>
         <div class="field">
           <label for="footer-email">Email *</label>
-          <input id="footer-email" name="email" type="email" autocomplete="email" required />
+          <input id="footer-email" name="email" type="email" autocomplete="email" required maxlength="254" />
         </div>
         <div class="field">
           <label for="footer-telefono">Teléfono</label>
-          <input id="footer-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
+          <input id="footer-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" />
         </div>
         <div class="field">
           <label for="footer-servicio">Servicio de interés *</label>
@@ -61,12 +61,13 @@ const { id = 'consulta' } = Astro.props;
         </div>
         <div class="field field--full">
           <label for="footer-mensaje">Contanos sobre tu proyecto *</label>
-          <textarea id="footer-mensaje" name="mensaje" required minlength="10"></textarea>
+          <textarea id="footer-mensaje" name="mensaje" required minlength="10" maxlength="3000"></textarea>
         </div>
       </div>
       <button class="form-submit cta cta--primary cta--light" type="submit"><span>Enviar consulta</span><span aria-hidden="true">↗</span></button>
       <p class="form-note">Los datos se utilizan únicamente para responder tu consulta.</p>
       <p class="form-status" data-form-status aria-live="polite"></p>
+      <noscript><p class="form-note">Para usar el formulario, activá JavaScript. También podés escribirnos por WhatsApp o email desde los enlaces de esta sección.</p></noscript>
     </form>
   </div>
 </section>
