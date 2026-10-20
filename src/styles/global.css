@@ -609,3 +609,75 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 600px) {
   .footer-credit { flex-direction: column; align-items: flex-start; gap: 0; }
 }
+
+/* Contact and footer: architectural lines, warm contrast, clear hierarchy. */
+.footer-contact { position: relative; background: #1a1d19; border-bottom: 0; padding-block: clamp(4.5rem, 7vw, 7rem); scroll-margin-top: 6rem; }
+.footer-contact__layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(3rem, 6vw, 6rem); }
+.footer-contact__intro .section-title { font-size: clamp(2.6rem, 4.3vw, 4.6rem); line-height: 1.04; letter-spacing: -.055em; max-width: 13ch; }
+.footer-contact__copy { max-width: 34ch; font-size: .95rem; margin-top: 1.4rem; color: #babdb3; opacity: 1; }
+.contact-channels { margin-top: 2.5rem; }
+.contact-channels > a { display: grid; gap: .45rem; padding: 1.2rem 0; border-top: 1px solid #ffffff21; }
+.contact-channels__label { color: #a7ad9c; font-size: .6rem; text-transform: uppercase; letter-spacing: .13em; }
+.contact-channels__value { display: flex; justify-content: space-between; gap: .7rem; font-size: 1.12rem; letter-spacing: -.025em; }
+.contact-channels__value > span { color: #c2cbb2; transition: transform .2s; }
+.contact-channels a:hover .contact-channels__value > span { transform: translate(3px, -3px); }
+.contact-channels__email { font-size: clamp(.86rem, 1.35vw, 1.1rem); overflow-wrap: anywhere; }
+.contact-channels__detail { color: #b6b9b0; font-size: .75rem; }
+.contact-phone { font-size: .75rem; color: #b6b9b0; margin-top: 1rem; }
+.contact-phone a { display: inline-block; padding-block: .6rem; color: var(--paper); text-decoration: underline; text-underline-offset: 4px; margin-left: .4rem; }
+.contact-showroom__heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding-block: 3rem; }
+.contact-showroom__heading h2 { margin-top: 1rem; font-size: clamp(1.7rem, 3vw, 3rem); font-weight: 400; letter-spacing: -.045em; }
+.contact-showroom__heading > a { display: inline-flex; align-items: center; gap: 1.5rem; min-height: 44px; white-space: nowrap; border-bottom: 1px solid var(--ink); font-size: .8rem; }
+.contact-channels a:focus-visible, .site-footer a:focus-visible { outline: 2px solid #d0d8c2; outline-offset: 5px; }
+.footer-contact__form { padding: clamp(1.5rem, 3vw, 3rem); background: #232720; border: 1px solid #a7b29830; box-shadow: 0 24px 60px #00000012; }
+.footer-contact__form-heading { padding-bottom: 2rem; }
+.footer-contact__form-heading h3 { font-size: clamp(1.6rem, 2.2vw, 2.15rem); font-weight: 400; letter-spacing: -.04em; }
+.footer-contact__form-heading p { font-size: .8rem; color: #b6b9b0; margin-top: .4rem; }
+.footer-contact .form-grid { gap: 1.5rem; }
+.footer-contact .field { margin-bottom: .5rem; min-width: 0; }
+.footer-contact .field label { color: #c7cabe; font-size: .6rem; letter-spacing: .08em; }
+.footer-contact .field input, .footer-contact .field select, .footer-contact .field textarea { background: #161a1438; padding: .85rem .65rem; border: 1px solid #ffffff25; border-radius: 0; font-size: .9rem; }
+.footer-contact .field input:focus, .footer-contact .field select:focus, .footer-contact .field textarea:focus { outline: 1px solid #c2cbb2; border-color: #c2cbb2; }
+.footer-contact .was-validated .field :invalid { border-color: #efaa9f; }
+.footer-contact .field textarea { min-height: 8.5rem; }
+.footer-contact .form-submit { margin-top: 1.4rem; background: #d3dbc5; border-color: #d3dbc5; color: #1a1d19; display: flex; justify-content: space-between; padding-inline: 1.4rem; }
+.footer-contact .form-submit:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
+.footer-contact .form-submit > span:last-child { font-size: 1.3rem; }
+.footer-contact .form-note { font-size: .68rem; line-height: 1.5; opacity: .7; }
+.site-footer { position: relative; padding-top: clamp(3.5rem, 6vw, 6rem); background: #10130f; border-top: 1px solid #a7b29828; }
+.footer-top { grid-template-columns: minmax(0, 1.7fr) minmax(0, .65fr) minmax(0, .8fr); gap: 3rem; padding-bottom: clamp(3rem, 5vw, 5rem); }
+.footer-brand img { width: 12rem; margin-bottom: 1.7rem; }
+.footer-brand .footer-brand__statement { font-size: clamp(1.65rem, 2.55vw, 2.8rem); line-height: 1.16; letter-spacing: -.045em; opacity: 1; margin-bottom: 1.5rem; }
+.footer-brand__statement span { color: #aeb7a1; }
+.footer-brand__caption { font-size: .59rem; letter-spacing: .11em; text-transform: uppercase; color: #a4aa9b; }
+.footer-links { gap: 0; }
+.footer-links .eyebrow { color: #aeb7a1; opacity: 1; font-size: .58rem; margin-bottom: 1.25rem; }
+.footer-links a { display: flex; align-items: center; min-height: 40px; font-size: .9rem; opacity: .85; }
+.footer-signature { border-left: 1px solid #ffffff21; padding-left: 2rem; }
+.footer-signature__number { font-size: 4rem; font-weight: 300; letter-spacing: -.07em; line-height: 1; color: #cbd4bf; }
+.footer-signature__number > span { font-size: .75rem; letter-spacing: 0; margin-left: .5rem; }
+.footer-signature p { font-size: .78rem; line-height: 1.7; margin-top: 1rem; }
+.footer-signature > a { display: inline-flex; gap: 1rem; align-items: center; min-height: 44px; margin-top: .8rem; font-size: .7rem; }
+.footer-bottom { padding-top: 1rem; }
+@media (max-width: 1000px) {
+  .footer-contact__layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-contact__intro .section-title { max-width: 18ch; }
+  .contact-channels { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
+  .contact-channels > a:last-child { grid-column: 1 / -1; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .footer-contact__layout { gap: 2rem; }
+  .contact-showroom__heading { align-items: start; flex-direction: column; gap: 1rem; }
+  .contact-channels { display: block; margin-top: 2rem; }
+  .footer-contact__form { padding: 1.35rem; }
+  .footer-contact .form-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .footer-contact__form-heading { padding-bottom: 1.6rem; }
+  .footer-top { grid-template-columns: 1fr 1fr !important; gap: 2.5rem 1rem; }
+  .site-footer .footer-top > .footer-brand { grid-column: 1 / -1; }
+  .footer-signature { padding-left: 1.2rem; }
+  .footer-signature__number { font-size: 3rem; }
+  .footer-brand__caption { display: block; line-height: 1.8; max-width: 29ch; }
+  .footer-bottom { gap: .8rem; }
+}

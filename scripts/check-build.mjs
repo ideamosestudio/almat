@@ -9,6 +9,7 @@ for (const route of routes) {
   assert.ok(html.includes(`rel="canonical" href="${origin}${base}/${route}"`), `canonical: ${route}`);
   assert.ok(html.includes('action="https://mail.almatcerramientos.com.ar/almat-api/contact.php"'), `own mail endpoint: ${route}`);
   assert.ok(!html.includes('formsubmit.co'), `third-party form endpoint: ${route}`);
+  assert.equal((html.match(/data-contact-form/g) || []).length, 1, `exactly one contact form: ${route}`);
   if (custom) assert.ok(!html.includes('ideamosestudio.github.io'), `old domain: ${route}`);
   for (const match of html.matchAll(/(?:href|src)="(\/[^"?#]*)(?:[?#][^"]*)?"/g)) {
     const url = match[1];

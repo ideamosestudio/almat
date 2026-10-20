@@ -3,25 +3,24 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<footer class="site-footer" id="pie">
   <div class="footer-top">
-    <div>
+    <div class="footer-brand">
       <img src={`${base}/brand/almat-logo-white.png`} alt="ALMAT" width="220" height="74" loading="lazy" />
-      <p>Aberturas y cerramientos que integran arquitectura, funcionalidad y calidad.</p>
+      <p class="footer-brand__statement">Diseño que conecta.<br /><span>Calidad que permanece.</span></p>
+      <span class="footer-brand__caption">Aberturas y cerramientos a medida / Desde 1996</span>
     </div>
     <div class="footer-links">
-      <span class="eyebrow">NAVEGACIÓN</span>
+      <span class="eyebrow">EXPLORÁ ALMAT</span>
       <a href={`${base}/`}>Inicio</a>
       <a href={`${base}/nosotros/`}>Nosotros</a>
       <a href={`${base}/servicios/`}>Servicios</a>
       <a href={`${base}/contacto/`}>Contacto</a>
     </div>
-    <div class="footer-links">
-      <span class="eyebrow">CONTACTO</span>
-      <a href="mailto:almatcerramientos@gmail.com">almatcerramientos@gmail.com</a>
-      <a href="tel:+541121272548">2127-2548</a>
-      <a href="https://wa.me/5491127332222" target="_blank" rel="noreferrer">WhatsApp 11 2733-2222</a>
-      <a href="https://maps.google.com/?q=Av.+Raúl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer">Scalabrini Ortiz 1022, CABA</a>
+    <div class="footer-signature">
+      <span class="footer-signature__number">30<span>años</span></span>
+      <p>El oficio de transformar<br />espacios, generación<br />tras generación.</p>
+      <a href={`${base}/nosotros/`}>Nuestra historia <span aria-hidden="true">↗</span></a>
     </div>
   </div>
   <div class="footer-bottom" id="creditos">
