@@ -30,6 +30,7 @@ const { id = 'consulta' } = Astro.props;
     </div>
 
     <form class="contact-form footer-contact__form" action="https://mail.almatcerramientos.com.ar/almat-api/contact.php" method="POST" data-contact-form novalidate>
+      <div data-form-fields>
       <div class="footer-contact__form-heading">
         <h3>Contanos tu idea.</h3>
         <p>Nosotros te ayudamos a darle forma.</p>
@@ -67,6 +68,20 @@ const { id = 'consulta' } = Astro.props;
       </div>
       <button class="form-submit cta cta--primary cta--light" type="submit"><span>Enviar consulta</span><span aria-hidden="true"><ArrowIcon /></span></button>
       <p class="form-note">Los datos se utilizan únicamente para responder tu consulta.</p>
+      </div>
+      <section class="form-success" data-form-success hidden aria-labelledby="form-success-title">
+        <svg class="form-success__icon" width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true" focusable="false">
+          <rect x="1" y="1" width="54" height="54" rx="27" stroke="currentColor" stroke-opacity=".35" />
+          <path d="m17 28 7 7 15-15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <p class="eyebrow">CONSULTA ENVIADA</p>
+        <h3 id="form-success-title" tabindex="-1">Gracias por abrirnos<br />la puerta a tu proyecto.</h3>
+        <p class="form-success__copy">Nuestro equipo va a revisar tu consulta y se pondrá en contacto con vos para dar el próximo paso.</p>
+        <div class="form-success__footer">
+          <span>De tu idea, al próximo espacio.</span>
+          <button type="button" data-form-again>Enviar otra consulta <ArrowIcon /></button>
+        </div>
+      </section>
       <p class="form-status" data-form-status aria-live="polite"></p>
       <noscript><p class="form-note">Para usar el formulario, activá JavaScript. También podés escribirnos por WhatsApp o email desde los enlaces de esta sección.</p></noscript>
     </form>

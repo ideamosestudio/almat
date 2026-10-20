@@ -438,6 +438,18 @@ h1, h2, h3, p { margin: 0; }
 .footer-contact .field select option { background: var(--ink); color: var(--paper); }
 .footer-contact .form-note { opacity: .55; }
 .footer-contact .form-status[data-state="error"] { color: #efaa9f; }
+.footer-contact__form [hidden] { display: none; }
+.form-success { min-height: 31rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: 1rem; animation: confirmation-in .45s ease both; }
+.form-success__icon { color: #d3dbc5; margin-bottom: 2.25rem; flex: none; }
+.form-success .eyebrow { color: #c2cbb2; margin-bottom: 1.25rem; }
+.form-success h3 { font-size: clamp(1.8rem, 3vw, 2.75rem); line-height: 1.12; letter-spacing: -.045em; font-weight: 300; outline-offset: 8px; }
+.form-success__copy { max-width: 32rem; margin-top: 1.5rem; color: #c2c5bb; font-size: .95rem; line-height: 1.75; }
+.form-success__footer { width: 100%; border-top: 1px solid #a7b29830; margin-top: 2.5rem; padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem; }
+.form-success__footer > span { color: #c2cbb2; font-size: .8rem; }
+.form-success__footer button { display: inline-flex; align-items: center; justify-content: space-between; gap: 1rem; width: fit-content; min-height: 44px; padding: 0; background: transparent; color: var(--paper); border: 0; border-bottom: 1px solid #c2cbb2; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+.form-success__footer button:hover { color: #d3dbc5; }
+@keyframes confirmation-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .form-success { animation: none; } }
 
 /* Reveal motion */
 .will-reveal.reveal-up, .will-reveal[data-reveal] { opacity: 0; transform: translateY(2rem); transition: opacity .9s ease, transform .9s var(--ease); }
@@ -677,10 +689,23 @@ h1, h2, h3, p { margin: 0; }
   .footer-contact .field input, .footer-contact .field select, .footer-contact .field textarea { font-size: 1rem; }
   .footer-contact .form-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .footer-contact__form-heading { padding-bottom: 1.6rem; }
-  .footer-top { grid-template-columns: 1fr 1fr !important; gap: 2.5rem 1rem; }
+  .site-footer { padding-top: 3rem; padding-bottom: 5.5rem; }
+  .footer-top { grid-template-columns: 1fr !important; gap: 2rem; padding-bottom: 2rem; }
   .site-footer .footer-top > .footer-brand { grid-column: 1 / -1; }
-  .footer-signature { padding-left: 1.2rem; }
-  .footer-signature__number { font-size: 3rem; }
-  .footer-brand__caption { display: block; line-height: 1.8; max-width: 29ch; }
-  .footer-bottom { gap: .8rem; }
+  .footer-brand img { width: 9.5rem; margin-bottom: 1.5rem; }
+  .footer-brand .footer-brand__statement { font-size: clamp(1.65rem, 6.7vw, 2.4rem); line-height: 1.2; margin-bottom: 1.25rem; }
+  .footer-brand__caption { display: block; line-height: 1.8; max-width: 32ch; font-size: .6rem; }
+  .site-footer .footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; border-top: 1px solid #ffffff21; padding-top: 1.5rem; }
+  .footer-links .eyebrow { grid-column: 1 / -1; margin-bottom: .75rem; }
+  .footer-links a { min-height: 44px; font-size: .9rem; }
+  .footer-signature { display: grid; grid-template-columns: auto 1fr; column-gap: 1.5rem; align-items: center; border-left: 0; border-top: 1px solid #ffffff21; padding: 1.75rem 0 0; }
+  .footer-signature__number { grid-row: 1 / 3; font-size: 3.5rem; white-space: nowrap; }
+  .footer-signature p { margin-top: 0; font-size: .85rem; line-height: 1.5; }
+  .footer-signature > a { grid-column: 2; margin-top: .35rem; gap: .6rem; }
+  .footer-bottom { display: flex; flex-direction: column; align-items: stretch; padding-right: 0; gap: 1.4rem; padding-top: 1.5rem; }
+  .footer-bottom > span { font-size: .6rem; opacity: .75; }
+  .footer-credit { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding-top: 1.15rem; border-top: 1px solid #ffffff12; }
+  .footer-credit > span { max-width: 23ch; font-size: .7rem; line-height: 1.65; }
+  .footer-credit img { width: 82px; }
+  .form-success { min-height: 29rem; }
 }

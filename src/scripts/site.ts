@@ -213,6 +213,16 @@ const initLightbox = () => {
 const initForm = () => {
   document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
     const status = form.querySelector<HTMLElement>('[data-form-status]')!;
+    const fields = form.querySelector<HTMLElement>('[data-form-fields]')!;
+    const success = form.querySelector<HTMLElement>('[data-form-success]')!;
+    form.querySelector('[data-form-again]')?.addEventListener('click', () => {
+      success.hidden = true;
+      fields.hidden = false;
+      status.classList.remove('sr-only');
+      status.textContent = '';
+      delete status.dataset.state;
+      form.querySelector<HTMLInputElement>('[name="nombre"]')?.focus();
+    });
     let sending = false;
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -250,8 +260,13 @@ const initForm = () => {
         }
         status.textContent = 'Gracias. Tu consulta fue enviada correctamente.';
         status.dataset.state = 'success';
+        status.classList.add('sr-only');
         form.reset();
         form.classList.remove('was-validated');
+        fields.hidden = true;
+        success.hidden = false;
+        success.querySelector<HTMLElement>('h3')?.focus({ preventScroll: true });
+        success.scrollIntoView({ behavior: prefersReduced ? 'instant' : 'smooth', block: 'center' });
       } catch (error) {
         status.textContent = error instanceof Error && error.name === 'Error'
           ? error.message
