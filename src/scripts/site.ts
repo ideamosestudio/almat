@@ -1,5 +1,76 @@
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const initSmoothWheel = () => {
+  const desktop = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let frame = 0;
+  let target = window.scrollY;
+  let written = window.scrollY;
+  let previousTime = 0;
+  let direction = 0;
+  const cancel = () => {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    target = written = window.scrollY;
+    direction = 0;
+  };
+  const blocked = () => !desktop.matches || reduced.matches
+    || document.body.matches('.menu-is-open, .dialog-open')
+    || !!document.querySelector('dialog[open]');
+  const animate = (time: number) => {
+    if (blocked() || Math.abs(window.scrollY - written) > 2) { cancel(); return; }
+    const elapsed = Math.min(time - previousTime, 32);
+    previousTime = time;
+    const remaining = target - window.scrollY;
+    const next = Math.abs(remaining) < 1.5
+      ? target
+      : window.scrollY + Math.sign(remaining) * Math.max(.5, Math.abs(remaining) * (1 - Math.exp(-elapsed / 140)));
+    window.scrollTo({ top: next, behavior: 'instant' });
+    written = window.scrollY;
+    if (Math.abs(target - written) < 1.5) { cancel(); return; }
+    frame = requestAnimationFrame(animate);
+  };
+  window.addEventListener('wheel', (event) => {
+    if (blocked() || !event.cancelable || event.ctrlKey || event.metaKey || event.shiftKey
+      || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.deltaY === 0) {
+      cancel(); return;
+    }
+    // Native scrolling for form controls and independently scrollable content.
+    for (const node of event.composedPath()) {
+      if (!(node instanceof HTMLElement) || node === document.body || node === document.documentElement) continue;
+      if (node.matches('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [data-menu]')) {
+        cancel(); return;
+      }
+      if (node.scrollHeight > node.clientHeight + 1 && /auto|scroll|overlay/.test(getComputedStyle(node).overflowY)) {
+        cancel(); return;
+      }
+    }
+    // Small, high-resolution trackpad gestures already provide smooth native motion.
+    if (event.deltaMode === 0 && Math.abs(event.deltaY) < 40) { cancel(); return; }
+    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const sign = Math.sign(event.deltaY);
+    if ((window.scrollY <= 0 && sign < 0) || (window.scrollY >= max && sign > 0)) { cancel(); return; }
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
+    const delta = sign * Math.min(Math.abs(event.deltaY) * unit * .55, 160);
+    if (!frame || sign !== direction) target = window.scrollY;
+    direction = sign;
+    const backlog = Math.min(420, window.innerHeight * .6);
+    target = Math.max(0, Math.min(max, window.scrollY + Math.max(-backlog, Math.min(backlog, target + delta - window.scrollY))));
+    event.preventDefault();
+    if (!frame) {
+      written = window.scrollY;
+      previousTime = performance.now();
+      frame = requestAnimationFrame(animate);
+    }
+  }, { passive: false });
+  for (const event of ['pointerdown', 'touchstart', 'keydown', 'focusin', 'hashchange', 'resize']) {
+    window.addEventListener(event, cancel, { passive: true });
+  }
+  document.addEventListener('visibilitychange', cancel);
+  desktop.addEventListener('change', cancel);
+  reduced.addEventListener('change', cancel);
+};
+
 const initHeader = () => {
   const header = document.querySelector<HTMLElement>('[data-header]');
   const menu = document.querySelector<HTMLElement>('[data-menu]');
@@ -281,7 +352,25 @@ const initForm = () => {
   });
 };
 
+const initFooterNavigation = () => {
+  const toggle = document.querySelector<HTMLButtonElement>('[data-footer-toggle]');
+  const nav = document.querySelector<HTMLElement>('#footer-navigation');
+  if (!toggle || !nav) return;
+  const close = () => {
+    toggle.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('is-open');
+  };
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') !== 'true';
+    toggle.setAttribute('aria-expanded', String(open));
+    nav.classList.toggle('is-open', open);
+  });
+  window.matchMedia('(max-width: 600px)').addEventListener('change', close);
+};
+
 initHeader();
+initSmoothWheel();
+initFooterNavigation();
 initHeroCopyWidths();
 initReveals();
 initParallax();
