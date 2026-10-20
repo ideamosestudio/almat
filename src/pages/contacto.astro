@@ -1,75 +1,22 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import FooterContactForm from '../components/FooterContactForm.astro';
 import heroGolden from '../assets/heroes/hero-golden.jpg';
-
 const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto.';
 ---
-<BaseLayout title="Contacto | ALMAT Cerramientos" description="Solicitá un presupuesto para aberturas y cerramientos. Showroom en Av. Raúl Scalabrini Ortiz 1022, CABA.">
-  <PageHero
-    image={heroGolden}
-    title="Hagamos realidad tu espacio"
-    intro="Contanos tu idea. La hacemos realidad."
-    position="center"
-    align="left"
+<BaseLayout title="Contacto | ALMAT Cerramientos" description="Solicitá un presupuesto para aberturas y cerramientos. Showroom en Av. Raúl Scalabrini Ortiz 1022, CABA." showContact={false}>
+  <PageHero image={heroGolden} title="Hagamos realidad tu espacio" intro="Contanos tu idea. La hacemos realidad." position="center" align="left"
     primaryCta={{ href: whatsapp, label: 'Escribir por WhatsApp', external: true }}
-    secondaryCta={{ href: '#contacto', label: 'Completar formulario' }}
-  />
-
-  <section class="section light-section" id="contacto">
-    <div class="wrap contact-layout">
-      <div class="contact-details">
-        <p class="eyebrow reveal-up">CONTACTO DIRECTO</p>
-        <h2 class="section-title reveal-title">Estamos para asesorarte</h2>
-        <div class="contact-list reveal-up">
-          <a href="mailto:almatcerramientos@gmail.com"><span>Email</span><span>almatcerramientos@gmail.com</span></a>
-          <a href="tel:+541121272548"><span>Teléfono</span><span>2127-2548</span></a>
-          <a href="https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20solicitar%20un%20presupuesto." target="_blank" rel="noreferrer"><span>WhatsApp</span><span>11 2733-2222</span></a>
-          <a href="https://maps.google.com/?q=Av.+Raúl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer"><span>Showroom</span><span>Av. Raúl Scalabrini Ortiz 1022, CABA</span></a>
-          <div><span>Atención</span><span>Lunes a viernes de 9 a 17 h</span></div>
-        </div>
-      </div>
-
-      <form class="contact-form" action="https://mail.almatcerramientos.com.ar/almat-api/contact.php" method="POST" data-contact-form novalidate>
-        <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="sr-only" />
-        <div class="form-grid">
-          <div class="field">
-            <label for="nombre">Nombre y apellido *</label>
-            <input id="nombre" name="nombre" type="text" autocomplete="name" required minlength="2" />
-          </div>
-          <div class="field">
-            <label for="email">Email *</label>
-            <input id="email" name="email" type="email" autocomplete="email" required />
-          </div>
-          <div class="field">
-            <label for="telefono">Teléfono</label>
-            <input id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" />
-          </div>
-          <div class="field">
-            <label for="servicio">Servicio de interés *</label>
-            <select id="servicio" name="servicio" required>
-              <option value="" selected disabled>Seleccioná una opción</option>
-              <option>Aberturas de aluminio</option>
-              <option>Cerramientos de aluminio</option>
-              <option>Vidrios, espejos y templados</option>
-              <option>Cerramientos corredizos y plegadizos</option>
-              <option>Aberturas de PVC</option>
-              <option>Otro / necesito asesoramiento</option>
-            </select>
-          </div>
-          <div class="field field--full">
-            <label for="mensaje">Contanos sobre tu proyecto *</label>
-            <textarea id="mensaje" name="mensaje" required minlength="10"></textarea>
-          </div>
-        </div>
-        <button class="form-submit cta cta--primary" type="submit"><span>Enviar consulta</span></button>
-        <p class="form-note">Los datos se utilizan únicamente para responder tu consulta.</p>
-        <p class="form-status" data-form-status aria-live="polite"></p>
-      </form>
+    secondaryCta={{ href: '#contacto', label: 'Completar formulario' }} />
+  <FooterContactForm id="contacto" />
+  <section class="contact-showroom light-section" aria-labelledby="showroom-map-title">
+    <div class="wrap contact-showroom__heading">
+      <div><p class="eyebrow">CONOCÉ LOS DETALLES DE CERCA</p><h2 id="showroom-map-title">Te esperamos en el showroom.</h2></div>
+      <a href="https://maps.google.com/?q=Av.+Ra%C3%BAl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer">Cómo llegar <span aria-hidden="true">↗</span></a>
     </div>
-  </section>
-
-  <section class="map-section" aria-label="Ubicación del showroom">
-    <iframe title="Mapa del showroom ALMAT, Av. Raúl Scalabrini Ortiz 1022, CABA" src="https://www.google.com/maps?q=Av.%20Ra%C3%BAl%20Scalabrini%20Ortiz%201022%2C%20CABA&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="map-section" aria-label="Ubicación del showroom">
+      <iframe title="Mapa del showroom ALMAT, Av. Raúl Scalabrini Ortiz 1022, CABA" src="https://www.google.com/maps?q=Av.%20Ra%C3%BAl%20Scalabrini%20Ortiz%201022,+CABA&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
   </section>
 </BaseLayout>
