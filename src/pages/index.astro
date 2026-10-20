@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from "../components/ArrowIcon.astro";
 import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ActionLink from '../components/ActionLink.astro';
@@ -190,9 +191,9 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
       <button class="lightbox__close" type="button" data-lightbox-close aria-label="Cerrar visor">×</button>
       <div class="lightbox__stage"><img src="" alt="" /></div>
       <div class="lightbox__controls">
-        <button type="button" data-lightbox-prev>← Anterior</button>
+        <button type="button" data-lightbox-prev><ArrowIcon direction="left" /> Anterior</button>
         <span data-lightbox-counter>01 / 05</span>
-        <button type="button" data-lightbox-next>Siguiente →</button>
+        <button type="button" data-lightbox-next>Siguiente <ArrowIcon direction="right" /></button>
       </div>
     </dialog>
   </section>
@@ -237,7 +238,7 @@ const galleryWithSources = await Promise.all(gallery.map(async (item) => ({
       ))}
     </div>
     <div class="wrap reviews-section__footer reveal-up">
-      <a href={googleReviews} target="_blank" rel="noopener noreferrer">Ver todas las opiniones en Google <span aria-hidden="true">↗</span></a>
+      <a href={googleReviews} target="_blank" rel="noopener noreferrer">Ver todas las opiniones en Google <span aria-hidden="true"><ArrowIcon /></span></a>
     </div>
   </section>
 </BaseLayout>

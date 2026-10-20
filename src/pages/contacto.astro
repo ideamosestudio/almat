@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from "../components/ArrowIcon.astro";
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import FooterContactForm from '../components/FooterContactForm.astro';
@@ -13,15 +14,10 @@ const whatsapp = 'https://wa.me/5491127332222?text=Hola%20ALMAT%2C%20quisiera%20
   <section class="contact-showroom light-section" aria-labelledby="showroom-map-title">
     <div class="wrap contact-showroom__heading">
       <div><p class="eyebrow">CONOCÉ LOS DETALLES DE CERCA</p><h2 id="showroom-map-title">Te esperamos en el showroom.</h2></div>
-      <a href="https://maps.google.com/?q=Av.+Ra%C3%BAl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer">Cómo llegar <span aria-hidden="true">↗</span></a>
+      <a href="https://maps.google.com/?q=Av.+Ra%C3%BAl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer">Cómo llegar <span aria-hidden="true"><ArrowIcon /></span></a>
     </div>
-    <div class="map-section map-section--deferred" role="region" aria-label="Ubicación del showroom" data-map>
-      <div class="map-placeholder" data-map-placeholder>
-        <span class="eyebrow">SCALABRINI ORTIZ 1022 · CABA</span>
-        <button type="button" class="cta cta--primary" data-load-map>Ver mapa interactivo <span aria-hidden="true">↗</span></button>
-        <p>El mapa de Google se carga cuando lo abrís.</p>
-      </div>
-      <iframe title="Mapa del showroom ALMAT, Av. Raúl Scalabrini Ortiz 1022, CABA" data-map-src="https://www.google.com/maps?q=Av.%20Ra%C3%BAl%20Scalabrini%20Ortiz%201022,+CABA&output=embed" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+    <div class="map-section" role="region" aria-label="Ubicación del showroom" id="mapa">
+      <iframe title="Mapa del showroom ALMAT, Av. Raúl Scalabrini Ortiz 1022, CABA" src="https://www.google.com/maps?q=Av.%20Ra%C3%BAl%20Scalabrini%20Ortiz%201022,+CABA&output=embed" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
   </section>
 </BaseLayout>
