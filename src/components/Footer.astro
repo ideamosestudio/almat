@@ -24,9 +24,14 @@ const year = new Date().getFullYear();
       <a href="https://maps.google.com/?q=Av.+Raúl+Scalabrini+Ortiz+1022,+CABA" target="_blank" rel="noreferrer">Scalabrini Ortiz 1022, CABA</a>
     </div>
   </div>
-  <div class="footer-bottom">
+  <div class="footer-bottom" id="creditos">
     <span>© {year} ALMAT Cerramientos</span>
-    <span>Buenos Aires, Argentina</span>
+    <div class="footer-credit">
+      <span>Esta ventana digital, desarrollada por</span>
+      <a href="https://ideamos.com.ar/" target="_blank" rel="noopener noreferrer" aria-label="Ideamos — diseño y desarrollo web (abre en una nueva pestaña)">
+        <img src={`${base}/brand/ideamos-light.webp`} alt="Ideamos" width="870" height="213" loading="lazy" />
+      </a>
+    </div>
   </div>
 </footer>
 
