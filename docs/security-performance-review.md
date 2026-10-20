@@ -58,6 +58,34 @@ como análisis del stack; no es una certificación ni una prueba de penetración
   (LCP 3 s, CLS 0,06) incluyen versiones anteriores y no se actualizan al publicar.
   Una medición de laboratorio no equivale a aprobación de Core Web Vitals reales.
 
+### Resultado publicado
+
+PR #5 integrada en `a36ea817b979ebc75f158e4793cb93f2df24bc4d`.
+El workflow Pages `39476252433` terminó correctamente; el dominio sirvió CSP,
+logos WebP, texto nuevo del footer y un único formulario. Consola del navegador
+sin errores en la comprobación. Revisados contacto a 390 px, footer a 1366 px,
+galería, validación de campos, menú móvil con Escape y mapa bajo demanda.
+
+[PageSpeed posterior, 15:38 ART](https://pagespeed.web.dev/analysis/https-almatcerramientos-com-ar/manu5l5uz2?form_factor=mobile):
+
+| Medición de laboratorio | Antes | Después |
+| --- | ---: | ---: |
+| Rendimiento móvil | 81 | 100 |
+| Accesibilidad móvil | 90 | 100 |
+| LCP móvil | 4,4 s | 1,7 s |
+| Rendimiento escritorio | 99 | 100 |
+| LCP escritorio | 0,9 s | 0,5 s |
+
+Buenas prácticas y SEO móvil permanecen en 100; TBT 0 ms y CLS 0 en ambas
+mediciones nuevas. Las puntuaciones pueden variar entre ejecuciones y no eliminan
+los límites de headers/caché ni sustituyen pruebas manuales.
+
+Endpoint actualizado con respaldo en `~/almat-backup-security-20261020/`.
+Comprobación pública: 422 ante datos incompletos, headers de seguridad presentes
+y acceso a `almat-api/error_log` bloqueado con 403. HTTPS raíz devuelve 200;
+HTTP y www redirigen al dominio canónico HTTPS; gzip activo. No se enviaron
+correos reales durante esta revisión.
+
 ## Límites y tareas de hosting
 
 GitHub Pages no ofrece headers personalizados mediante archivos del repositorio.
