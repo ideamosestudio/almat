@@ -101,7 +101,7 @@ for (const [profile, width, height] of profiles) {
         const style = getComputedStyle(item);
         return { family: style.fontFamily.toLowerCase(), size: parseFloat(style.fontSize), weight: style.fontWeight };
       }));
-      if (titleCopyStyles.some(({ family, size, weight }) => !family.includes('roboto') || size !== 16 || weight !== '300')) errors.push(`${profile}/${route || 'home'}: title supporting copy is not 16px Roboto Light on desktop`);
+      if (titleCopyStyles.some(({ family, size, weight }) => !family.includes('roboto') || size !== 19 || weight !== '300')) errors.push(`${profile}/${route || 'home'}: title supporting copy is not 19px Roboto Light on desktop`);
     }
     const punctuatedLargeTitles = await page.locator('h1, h2').evaluateAll((titles) => titles.map((title) => title.textContent?.trim() ?? '').filter((title) => title.endsWith('.')));
     if (punctuatedLargeTitles.length) errors.push(`${profile}/${route || 'home'}: large title still ends in a period: ${punctuatedLargeTitles.join(' | ')}`);
