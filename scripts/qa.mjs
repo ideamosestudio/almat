@@ -120,7 +120,7 @@ for (const [profile, width, height] of profiles) {
       const label = item.querySelector('span') ?? item;
       return { weight: parseInt(style.fontWeight, 10), size: parseFloat(style.fontSize), transform: getComputedStyle(label).transform };
     }));
-    if (buttonType.some(({ weight, size, transform }) => weight !== 550 || Math.abs(size - 9.52) > .05 || transform !== 'none')) errors.push(`${profile}/${route || 'home'}: button labels do not use the requested 2px smaller type without vertical displacement`);
+    if (buttonType.some(({ weight, size, transform }) => weight !== 550 || Math.abs(size - 12.52) > .05 || transform !== 'none')) errors.push(`${profile}/${route || 'home'}: button labels do not use the requested enlarged type without vertical displacement`);
     if (width <= 640) {
       const groupsWithMultipleVisibleCtas = await page.locator('.cta-group').evaluateAll((groups) => groups.filter((group) => Array.from(group.querySelectorAll('.cta')).filter((cta) => getComputedStyle(cta).display !== 'none').length > 1).length);
       if (groupsWithMultipleVisibleCtas) errors.push(`${profile}/${route || 'home'}: a mobile CTA group shows more than its first action`);

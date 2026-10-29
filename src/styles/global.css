@@ -104,13 +104,13 @@ h1, h2, h3, p { margin: 0; }
 .site-header.is-scrolled .brand__light { opacity: 0; }
 .site-header.is-scrolled .brand__dark { opacity: 1; }
 .desktop-nav { display: flex; align-items: center; gap: clamp(1.5rem, 2.4vw, 2.8rem); }
-.nav-link { position: relative; padding-block: .5rem; font-size: .76rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+.nav-link { position: relative; padding-block: .5rem; font-size: calc(.76rem + 3px); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
 .nav-link::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: .25rem; height: 1px;
   background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease);
 }
 .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); transform-origin: left; }
-.header-contact { justify-self: end; display: flex; min-height: 2.75rem; align-items: center; padding: .65rem .85rem; border: 2px solid currentColor; font-size: calc(.72rem - 2px); font-weight: 550; letter-spacing: .09em; text-transform: uppercase; transition: color .3s ease, background-color .3s ease; }
+.header-contact { justify-self: end; display: flex; min-height: 2.75rem; align-items: center; padding: .65rem .85rem; border: 2px solid currentColor; font-size: calc(.72rem + 1px); font-weight: 550; letter-spacing: .09em; text-transform: uppercase; transition: color .3s ease, background-color .3s ease; }
 .site-header .header-contact:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .menu-toggle { position: relative; z-index: 2; display: none; justify-self: end; width: 2.6rem; height: 2.6rem; border: 0; background: none; padding: .5rem; }
 .menu-toggle > span:not(.sr-only) { display: block; width: 100%; height: 1px; margin: .38rem 0; background: currentColor; transition: transform .4s var(--ease); }
@@ -135,7 +135,7 @@ h1, h2, h3, p { margin: 0; }
 .cta-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-top: var(--space-5); }
 .cta {
   display: inline-flex; min-height: 3.25rem; width: fit-content; align-items: center; justify-content: center;
-  padding: .85rem 1.25rem; border-radius: 0; font-size: calc(.72rem - 2px); font-weight: 550;
+  padding: .85rem 1.25rem; border-radius: 0; font-size: calc(.72rem + 1px); font-weight: 550;
   letter-spacing: .1em; line-height: 1.1; text-transform: uppercase;
   transition: color .35s ease, background-color .35s ease, transform .35s var(--ease), border-color .35s ease;
 }
